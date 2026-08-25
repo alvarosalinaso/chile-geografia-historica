@@ -88,5 +88,13 @@ shapely>=2.0.0
 
 ---
 
+## Related projects
+
+- [Chilean Video Games](https://github.com/alvarosalinaso/chilean-videogames-analysis) — Market analysis of Chilean indie games
+- [Chilean Political Discourse + NLP](https://github.com/alvarosalinaso/geopolitica-textual-nlp) — NLP on presidential speeches
+- [Portfolio Web](https://github.com/alvarosalinaso/portfolio-web) — Dashboard with all projects
+
+---
+
 > **Álvaro Salinas Ortiz**
 > [LinkedIn](https://www.linkedin.com/in/alvaro-salinas-ortiz) | [Portfolio](https://alvarosalinaso.github.io/portfolio-web/)
