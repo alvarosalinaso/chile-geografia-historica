@@ -1,0 +1,64 @@
+import csv
+import os
+
+RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
+
+# Chilean presidents with birthplace coordinates
+# Source: BCN Historia Política + Wikipedia
+PRESIDENTS = [
+    {"name": "Manuel Blanco Encalada", "start": 1826, "end": 1827, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Ramón Freire", "start": 1827, "end": 1829, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Francisco Ramón de Vicuña", "start": 1829, "end": 1829, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "José Tomás Ovalle", "start": 1830, "end": 1831, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "José Joaquín Prieto", "start": 1831, "end": 1841, "birthplace": "Concepción", "lat": -36.8270, "lon": -73.0503},
+    {"name": "Manuel Bulnes", "start": 1841, "end": 1851, "birthplace": "Concepción", "lat": -36.8270, "lon": -73.0503},
+    {"name": "Manuel Montt", "start": 1851, "end": 1861, "birthplace": "Petorca", "lat": -32.2533, "lon": -70.9325},
+    {"name": "José Joaquín Pérez", "start": 1861, "end": 1871, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Federico Errázuriz Zañartu", "start": 1871, "end": 1876, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Aníbal Pinto", "start": 1876, "end": 1881, "birthplace": "Concepción", "lat": -36.8270, "lon": -73.0503},
+    {"name": "Domingo Santa María", "start": 1881, "end": 1886, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "José Manuel Balmaceda", "start": 1886, "end": 1891, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Jorge Montt", "start": 1891, "end": 1896, "birthplace": "Casablanca", "lat": -33.3167, "lon": -71.3667},
+    {"name": "Federico Errázuriz Echaurren", "start": 1896, "end": 1901, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Germán Riesco", "start": 1901, "end": 1906, "birthplace": "Rancagua", "lat": -34.1704, "lon": -70.7401},
+    {"name": "Pedro Montt", "start": 1906, "end": 1910, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Ramón Barros Luco", "start": 1910, "end": 1915, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Juan Luis Sanfuentes", "start": 1915, "end": 1920, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Arturo Alessandri", "start": 1920, "end": 1924, "birthplace": "Longaví", "lat": -35.9633, "lon": -71.6833},
+    {"name": "Emiliano Figueroa", "start": 1925, "end": 1927, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Carlos Ibáñez del Campo", "start": 1927, "end": 1931, "birthplace": "Temuco", "lat": -38.7359, "lon": -72.5904},
+    {"name": "Juan Esteban Montero", "start": 1931, "end": 1932, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Arturo Puga", "start": 1932, "end": 1932, "birthplace": "Valparaíso", "lat": -33.0472, "lon": -71.6127},
+    {"name": "Carlos Dávila", "start": 1932, "end": 1932, "birthplace": "Nacimiento", "lat": -37.4953, "lon": -72.6694},
+    {"name": "Bartolomé Blanche", "start": 1932, "end": 1932, "birthplace": "La Serena", "lat": -29.9027, "lon": -71.2520},
+    {"name": "Arturo Alessandri", "start": 1932, "end": 1938, "birthplace": "Longaví", "lat": -35.9633, "lon": -71.6833},
+    {"name": "Pedro Aguirre Cerda", "start": 1938, "end": 1941, "birthplace": "Punitaqui", "lat": -30.8414, "lon": -71.2482},
+    {"name": "Gabriel González Videla", "start": 1946, "end": 1952, "birthplace": "La Serena", "lat": -29.9027, "lon": -71.2520},
+    {"name": "Carlos Ibáñez del Campo", "start": 1952, "end": 1958, "birthplace": "Temuco", "lat": -38.7359, "lon": -72.5904},
+    {"name": "Jorge Alessandri", "start": 1958, "end": 1964, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Eduardo Frei Montalva", "start": 1964, "end": 1970, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Salvador Allende", "start": 1970, "end": 1973, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Augusto Pinochet", "start": 1973, "end": 1990, "birthplace": "Valparaíso", "lat": -33.0472, "lon": -71.6127},
+    {"name": "Patricio Aylwin", "start": 1990, "end": 1994, "birthplace": "Viña del Mar", "lat": -33.0153, "lon": -71.5500},
+    {"name": "Eduardo Frei Ruiz-Tagle", "start": 1994, "end": 2000, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Ricardo Lagos", "start": 2000, "end": 2006, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Michelle Bachelet", "start": 2006, "end": 2010, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Sebastián Piñera", "start": 2010, "end": 2014, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Michelle Bachelet", "start": 2014, "end": 2018, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Sebastián Piñera", "start": 2018, "end": 2022, "birthplace": "Santiago", "lat": -33.4489, "lon": -70.6693},
+    {"name": "Gabriel Boric", "start": 2022, "end": 2026, "birthplace": "Punta Arenas", "lat": -53.1548, "lon": -70.9113},
+]
+
+
+def collect_presidents():
+    os.makedirs(RAW_DIR, exist_ok=True)
+    out = os.path.join(RAW_DIR, "presidents.csv")
+    with open(out, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["name", "start", "end", "birthplace", "lat", "lon"])
+        w.writeheader()
+        w.writerows(PRESIDENTS)
+    print(f"OK: {len(PRESIDENTS)} presidents -> {out}")
+
+
+if __name__ == "__main__":
+    collect_presidents()

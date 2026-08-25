@@ -1,0 +1,25 @@
+year,event,city,lat,lon,type
+1810,Primera Junta de Gobierno,Santiago,-33.4489,-70.6693,político
+1817,Batalla de Chacabuco,Cuesta de Chacabuco,-33.15,-70.6667,militar
+1818,Batalla de Maipú,Santiago,-33.5167,-70.75,militar
+1818,Independencia de Chile,Talca,-35.4264,-71.6554,político
+1833,Constitución Política,Santiago,-33.4489,-70.6693,político
+1866,Batalla de Iquique,Iquique,-20.2141,-70.1524,militar
+1879,Guerra del Pacífico (inicio),Antofagasta,-23.6509,-70.3975,militar
+1883,Tratado de Ancón,Ancón,-27.171,-70.992,político
+1906,Terremoto de Valparaíso,Valparaíso,-33.0472,-71.6127,desastre
+1925,Nueva Constitución,Santiago,-33.4489,-70.6693,político
+1938,Matanza del Seguro Obrero,Santiago,-33.4489,-70.6693,político
+1945,Fin de la Segunda Guerra Mundial,Santiago,-33.4489,-70.6693,político
+1960,Gran Terremoto de Valdivia,Valdivia,-39.8196,-73.2452,desastre
+1962,Copa Mundial de Fútbol,Santiago,-33.4652,-70.6105,deportivo
+1964,Reforma Agraria,Santiago,-33.4489,-70.6693,político
+1970,Elección de Salvador Allende,Santiago,-33.4489,-70.6693,político
+1973,Golpe de Estado,Santiago,-33.4489,-70.6693,político
+1985,Atentado contra Pinochet,Santiago,-33.4489,-70.6693,político
+1988,Plebiscito (NO gana),Santiago,-33.4489,-70.6693,político
+1990,Retorno a la democracia,Santiago,-33.4489,-70.6693,político
+2010,Terremoto del 27F,Concepción,-36.8201,-73.0444,desastre
+2010,Rescate mineros Copiapó,Copiapó,-27.3668,-70.3323,social
+2019,Estallido Social,Santiago,-33.4489,-70.6693,político
+2022,Proceso Constituyente,Santiago,-33.4489,-70.6693,político
