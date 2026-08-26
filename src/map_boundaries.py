@@ -1,6 +1,7 @@
-import folium
 import json
 import os
+
+import folium
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "raw")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output", "capas")

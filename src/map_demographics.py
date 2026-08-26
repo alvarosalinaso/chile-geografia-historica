@@ -1,7 +1,8 @@
 import csv
-import folium
 import json
 import os
+
+import folium
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output", "capas")
@@ -23,16 +24,14 @@ def map_demographics():
     with open(geojson_path, encoding="utf-8") as f:
         regions = json.load(f)
 
-    region_names = [r["properties"].get("Region", r["properties"].get("region", "")) for r in regions["features"]]
-
-    years = sorted(set(r["census_year"] for r in census))
+    years = sorted({r["census_year"] for r in census})
 
     m = folium.Map(location=[-35.0, -71.0], zoom_start=5, tiles="CartoDB positron")
 
-    max_pop = max(r["population"] for r in census)
-
     for year in years:
-        year_data = {r["region"]: r["population"] for r in census if r["census_year"] == year}
+        year_data = {
+            r["region"]: r["population"] for r in census if r["census_year"] == year
+        }
         fg = folium.FeatureGroup(name=f"Censo {year}")
 
         for feature in regions["features"]:

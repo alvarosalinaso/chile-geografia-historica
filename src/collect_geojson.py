@@ -1,10 +1,15 @@
 import os
+
 import requests
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "raw")
 
-REGIONES_GEOJSON_URL = "https://raw.githubusercontent.com/caracena/chile-geojson/master/regiones.json"
-COMUNAS_GEOJSON_URL = "https://raw.githubusercontent.com/fcortes/Chile-GeoJSON/master/Regional.geojson"
+REGIONES_GEOJSON_URL = (
+    "https://raw.githubusercontent.com/caracena/chile-geojson/master/regiones.json"
+)
+COMUNAS_GEOJSON_URL = (
+    "https://raw.githubusercontent.com/fcortes/Chile-GeoJSON/master/Regional.geojson"
+)
 
 
 def download_file(url, dest):

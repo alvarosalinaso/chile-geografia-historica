@@ -1,7 +1,8 @@
 import csv
-import folium
 import json
 import os
+
+import folium
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output")
@@ -77,9 +78,11 @@ def combine_layers():
         ).add_to(fg_boundaries)
         fg_boundaries.add_to(m)
 
-    years = sorted(set(r["census_year"] for r in census))
+    years = sorted({r["census_year"] for r in census})
     for year in years:
-        year_data = {r["region"]: r["population"] for r in census if r["census_year"] == year}
+        year_data = {
+            r["region"]: r["population"] for r in census if r["census_year"] == year
+        }
         if regions:
             fg = folium.FeatureGroup(name=f"Población {year}", show=(year == 2017))
             for feature in regions["features"]:
@@ -99,7 +102,9 @@ def combine_layers():
                         "weight": 0.5,
                         "fillOpacity": 0.6,
                     },
-                    popup=folium.Popup(f"<b>{region_name}</b><br>Población: {pop:,}", max_width=200),
+                    popup=folium.Popup(
+                        f"<b>{region_name}</b><br>Población: {pop:,}", max_width=200
+                    ),
                 ).add_to(fg)
             fg.add_to(m)
 
@@ -143,7 +148,9 @@ def combine_layers():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     out = os.path.join(OUTPUT_DIR, "chile_historico.html")
     m.save(out)
-    print(f"OK: Combined map ({len(presidents)} presidents, {len(events)} events) -> {out}")
+    print(
+        f"OK: Combined map ({len(presidents)} presidents, {len(events)} events) -> {out}"
+    )
 
 
 if __name__ == "__main__":

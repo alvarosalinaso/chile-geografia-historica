@@ -1,6 +1,7 @@
 import csv
-import folium
 import os
+
+import folium
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output", "capas")
@@ -34,7 +35,6 @@ def map_presidents():
         return "gray"
 
     for p in presidents:
-        decade = (p["start"] // 10) * 10
         folium.CircleMarker(
             location=[p["lat"], p["lon"]],
             radius=8,

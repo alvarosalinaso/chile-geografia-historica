@@ -3,15 +3,15 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+from collect_census import collect_census
+from collect_events import collect_events
 from collect_geojson import collect_geojson
 from collect_presidents import collect_presidents
-from collect_events import collect_events
-from collect_census import collect_census
-from map_presidents import map_presidents
+from combine_layers import combine_layers
+from map_boundaries import map_boundaries
 from map_demographics import map_demographics
 from map_events import map_events
-from map_boundaries import map_boundaries
-from combine_layers import combine_layers
+from map_presidents import map_presidents
 
 
 def analyze_all():

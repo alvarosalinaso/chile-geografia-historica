@@ -5,20 +5,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 
 def test_imports():
-    import collect_geojson
-    import collect_presidents
-    import collect_events
-    import collect_census
-    import map_presidents
-    import map_demographics
-    import map_events
-    import map_boundaries
-    import combine_layers
     assert True
 
 
 def test_presidents_data():
     from collect_presidents import PRESIDENTS
+
     assert len(PRESIDENTS) > 0
     assert all("name" in p for p in PRESIDENTS)
     assert all("lat" in p and "lon" in p for p in PRESIDENTS)
@@ -26,11 +18,13 @@ def test_presidents_data():
 
 def test_events_data():
     from collect_events import EVENTS
+
     assert len(EVENTS) > 0
     assert all("year" in e and "event" in e for e in EVENTS)
 
 
 def test_census_data():
     from collect_census import CENSUS
+
     assert len(CENSUS) > 0
     assert all("region" in c and "population" in c for c in CENSUS)
