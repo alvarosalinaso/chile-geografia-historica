@@ -1,0 +1,319 @@
+{
+  "forecasts": [
+    {
+      "region": "Santiago",
+      "pop_2025": 5241.4,
+      "pop_2030": 5454.0,
+      "growth_rate": 0.0268,
+      "r2": 0.862
+    },
+    {
+      "region": "Biobío",
+      "pop_2025": 1949.2,
+      "pop_2030": 2039.9,
+      "growth_rate": 0.0186,
+      "r2": 0.717
+    },
+    {
+      "region": "Aysén",
+      "pop_2025": 115.9,
+      "pop_2030": 120.7,
+      "growth_rate": 0.0148,
+      "r2": 0.983
+    },
+    {
+      "region": "Magallanes",
+      "pop_2025": 189.5,
+      "pop_2030": 197.1,
+      "growth_rate": 0.0142,
+      "r2": 0.987
+    },
+    {
+      "region": "Llanquihue",
+      "pop_2025": 360.5,
+      "pop_2030": 371.8,
+      "growth_rate": 0.0136,
+      "r2": 0.982
+    },
+    {
+      "region": "Cautín",
+      "pop_2025": 575.8,
+      "pop_2030": 593.7,
+      "growth_rate": 0.0134,
+      "r2": 0.973
+    },
+    {
+      "region": "Talca",
+      "pop_2025": 726.6,
+      "pop_2030": 749.1,
+      "growth_rate": 0.0132,
+      "r2": 0.868
+    },
+    {
+      "region": "Concepción",
+      "pop_2025": 1087.9,
+      "pop_2030": 1121.5,
+      "growth_rate": 0.0132,
+      "r2": 0.94
+    },
+    {
+      "region": "O'Higgins",
+      "pop_2025": 959.3,
+      "pop_2030": 995.5,
+      "growth_rate": 0.0127,
+      "r2": 0.96
+    },
+    {
+      "region": "Valparaíso",
+      "pop_2025": 1822.0,
+      "pop_2030": 1890.3,
+      "growth_rate": 0.0126,
+      "r2": 0.926
+    },
+    {
+      "region": "Metropolitana",
+      "pop_2025": 7735.9,
+      "pop_2030": 8111.8,
+      "growth_rate": 0.0123,
+      "r2": 0.998
+    },
+    {
+      "region": "Antofagasta",
+      "pop_2025": 598.0,
+      "pop_2030": 619.1,
+      "growth_rate": 0.0113,
+      "r2": 0.959
+    },
+    {
+      "region": "Linares",
+      "pop_2025": 409.0,
+      "pop_2030": 420.6,
+      "growth_rate": 0.011,
+      "r2": 0.917
+    },
+    {
+      "region": "Atacama",
+      "pop_2025": 294.1,
+      "pop_2030": 303.9,
+      "growth_rate": 0.0104,
+      "r2": 0.95
+    },
+    {
+      "region": "Tarapacá",
+      "pop_2025": 423.5,
+      "pop_2030": 436.9,
+      "growth_rate": 0.0096,
+      "r2": 0.901
+    },
+    {
+      "region": "Maule",
+      "pop_2025": 1110.9,
+      "pop_2030": 1152.8,
+      "growth_rate": 0.009,
+      "r2": 0.999
+    },
+    {
+      "region": "Coquimbo",
+      "pop_2025": 712.2,
+      "pop_2030": 732.8,
+      "growth_rate": 0.0084,
+      "r2": 0.923
+    },
+    {
+      "region": "Los Lagos",
+      "pop_2025": 873.3,
+      "pop_2030": 904.4,
+      "growth_rate": 0.0084,
+      "r2": 1.0
+    },
+    {
+      "region": "Valdivia",
+      "pop_2025": 409.1,
+      "pop_2030": 418.7,
+      "growth_rate": 0.0079,
+      "r2": 1.0
+    },
+    {
+      "region": "Arauco",
+      "pop_2025": 183.8,
+      "pop_2030": 188.0,
+      "growth_rate": 0.0077,
+      "r2": 0.982
+    },
+    {
+      "region": "Los Ríos",
+      "pop_2025": 426.5,
+      "pop_2030": 438.9,
+      "growth_rate": 0.0066,
+      "r2": 0.997
+    },
+    {
+      "region": "Ñuble",
+      "pop_2025": 537.0,
+      "pop_2030": 548.9,
+      "growth_rate": 0.0063,
+      "r2": 0.972
+    },
+    {
+      "region": "Malleco",
+      "pop_2025": 230.7,
+      "pop_2030": 235.3,
+      "growth_rate": 0.0062,
+      "r2": 0.991
+    },
+    {
+      "region": "Cauquenes",
+      "pop_2025": 204.2,
+      "pop_2030": 207.7,
+      "growth_rate": 0.0052,
+      "r2": 1.0
+    },
+    {
+      "region": "Chiloé",
+      "pop_2025": 190.9,
+      "pop_2030": 194.3,
+      "growth_rate": 0.0051,
+      "r2": 0.873
+    },
+    {
+      "region": "Aconcagua",
+      "pop_2025": 490.8,
+      "pop_2030": 498.4,
+      "growth_rate": 0.0045,
+      "r2": 1.0
+    },
+    {
+      "region": "Colchagua",
+      "pop_2025": 427.7,
+      "pop_2030": 434.5,
+      "growth_rate": 0.0044,
+      "r2": 0.991
+    },
+    {
+      "region": "La Araucanía",
+      "pop_2025": 994.0,
+      "pop_2030": 1010.8,
+      "growth_rate": 0.0036,
+      "r2": 0.786
+    }
+  ],
+  "event_impact": [
+    {
+      "event": "Nueva Constitución",
+      "year": 1925,
+      "pop_before": 4250.0,
+      "pop_after": 6037.0,
+      "year_before": 1907,
+      "year_after": 1940,
+      "change_pct": 42.0
+    },
+    {
+      "event": "Matanza del Seguro Obrero",
+      "year": 1938,
+      "pop_before": 4250.0,
+      "pop_after": 6037.0,
+      "year_before": 1907,
+      "year_after": 1940,
+      "change_pct": 42.0
+    },
+    {
+      "event": "Fin de la Segunda Guerra Mundial",
+      "year": 1945,
+      "pop_before": 6037.0,
+      "pop_after": 10435.0,
+      "year_before": 1940,
+      "year_after": 1970,
+      "change_pct": 72.9
+    },
+    {
+      "event": "Gran Terremoto de Valdivia",
+      "year": 1960,
+      "pop_before": 6037.0,
+      "pop_after": 10435.0,
+      "year_before": 1940,
+      "year_after": 1970,
+      "change_pct": 72.9
+    },
+    {
+      "event": "Copa Mundial de Fútbol",
+      "year": 1962,
+      "pop_before": 6037.0,
+      "pop_after": 10435.0,
+      "year_before": 1940,
+      "year_after": 1970,
+      "change_pct": 72.9
+    },
+    {
+      "event": "Reforma Agraria",
+      "year": 1964,
+      "pop_before": 6037.0,
+      "pop_after": 10435.0,
+      "year_before": 1940,
+      "year_after": 1970,
+      "change_pct": 72.9
+    },
+    {
+      "event": "Elección de Salvador Allende",
+      "year": 1970,
+      "pop_before": 10435.0,
+      "pop_after": 13590.0,
+      "year_before": 1970,
+      "year_after": 1992,
+      "change_pct": 30.2
+    },
+    {
+      "event": "Golpe de Estado",
+      "year": 1973,
+      "pop_before": 10435.0,
+      "pop_after": 13590.0,
+      "year_before": 1970,
+      "year_after": 1992,
+      "change_pct": 30.2
+    },
+    {
+      "event": "Atentado contra Pinochet",
+      "year": 1985,
+      "pop_before": 10435.0,
+      "pop_after": 13590.0,
+      "year_before": 1970,
+      "year_after": 1992,
+      "change_pct": 30.2
+    },
+    {
+      "event": "Plebiscito (NO gana)",
+      "year": 1988,
+      "pop_before": 10435.0,
+      "pop_after": 13590.0,
+      "year_before": 1970,
+      "year_after": 1992,
+      "change_pct": 30.2
+    },
+    {
+      "event": "Retorno a la democracia",
+      "year": 1990,
+      "pop_before": 10435.0,
+      "pop_after": 13590.0,
+      "year_before": 1970,
+      "year_after": 1992,
+      "change_pct": 30.2
+    },
+    {
+      "event": "Terremoto del 27F",
+      "year": 2010,
+      "pop_before": 15385.0,
+      "pop_after": 17738.0,
+      "year_before": 2002,
+      "year_after": 2017,
+      "change_pct": 15.3
+    },
+    {
+      "event": "Rescate mineros Copiapó",
+      "year": 2010,
+      "pop_before": 15385.0,
+      "pop_after": 17738.0,
+      "year_before": 2002,
+      "year_after": 2017,
+      "change_pct": 15.3
+    }
+  ]
+}
