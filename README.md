@@ -68,7 +68,6 @@ chile-geografia-historica/
 │   └── processed/               # Presidents, events, census CSVs
 ├── output/                      # Generated HTML maps
 ├── tests/
-├── Dockerfile
 └── requirements.txt
 ```
 

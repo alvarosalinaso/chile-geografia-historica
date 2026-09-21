@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import Input, Output, callback, dcc, html
+from dash import Input, Output, callback, dcc, html, dash_table
 
 app = dash.Dash(
     __name__,
@@ -51,7 +51,7 @@ def load_data():
     if geojson_path.exists():
         with open(geojson_path) as f:
             data["geojson"] = json.load(f)
-    forecast_path = DATA_DIR.parent / "data" / "export" / "forecast_results.json"
+    forecast_path = DATA_DIR.parent / "export" / "forecast_results.json"
     if forecast_path.exists():
         with open(forecast_path) as f:
             data["forecast"] = json.load(f)

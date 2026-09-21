@@ -3,6 +3,53 @@ import os
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 
+# Mapeo de regiones históricas (pre-1992) a regiones modernas (post-1992 / 2017)
+# Basado en la reorganización administrativa chilena
+HISTORIC_TO_MODERN_REGION = {
+    # 1907-1970 regions -> modern equivalents
+    "Aconcagua": "Valparaíso",          # Se fusionó en Valparaíso
+    "Colchagua": "O'Higgins",           # Se convirtió en O'Higgins
+    "Cauquenes": "Maule",               # Parte del Maule
+    "Talca": "Maule",                   # Parte del Maule
+    "Linares": "Maule",                 # Parte del Maule
+    "Ñuble": "Ñuble",                   # Ahora es región propia (2018)
+    "Concepción": "Biobío",             # Parte de Biobío
+    "Arauco": "Biobío",                 # Parte de Biobío
+    "Biobío": "Biobío",                 # Se mantiene
+    "Malleco": "La Araucanía",          # Parte de La Araucanía
+    "Cautín": "La Araucanía",           # Parte de La Araucanía
+    "Valdivia": "Los Ríos",             # Ahora es Los Ríos
+    "Osorno": "Los Lagos",              # Parte de Los Lagos
+    "Llanquihue": "Los Lagos",          # Parte de Los Lagos
+    "Chiloé": "Los Lagos",              # Parte de Los Lagos
+    "Aysén": "Aysén",                   # Se mantiene
+    "Magallanes": "Magallanes",         # Se mantiene
+    "Curicó": "Maule",                  # Parte del Maule (1970)
+    # Regions that map to themselves
+    "Tarapacá": "Tarapacá",
+    "Antofagasta": "Antofagasta",
+    "Atacama": "Atacama",
+    "Coquimbo": "Coquimbo",
+    "Valparaíso": "Valparaíso",
+    "Santiago": "Metropolitana",
+    "O'Higgins": "O'Higgins",
+}
+
+def map_to_modern_region(region: str, census_year: int) -> str:
+    """Mapea nombre de región histórica a región moderna según el año del censo."""
+    if census_year >= 1992:
+        # Desde 1992 en adelante, los nombres ya son modernos (con ajustes menores)
+        # 2017 agrega Arica y Parinacota, Ñuble
+        if census_year >= 2017:
+            if region == "Tarapacá":
+                # En 2017, Tarapacá se divide en Arica y Parinacota + Tarapacá
+                # No podemos desagregar sin datos, mantener como Tarapacá
+                return region
+        return region
+    # Pre-1992: usar mapeo histórico
+    return HISTORIC_TO_MODERN_REGION.get(region, region)
+
+
 # Chilean census data by region (selected censuses)
 # Source: INE - Instituto Nacional de Estadísticas
 # Population in thousands
@@ -133,9 +180,16 @@ def collect_census():
     os.makedirs(RAW_DIR, exist_ok=True)
     out = os.path.join(RAW_DIR, "census.csv")
     with open(out, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["region", "census_year", "population"])
+        w = csv.DictWriter(f, fieldnames=["region", "census_year", "population", "modern_region"])
         w.writeheader()
-        w.writerows(CENSUS)
+        for record in CENSUS:
+            modern = map_to_modern_region(record["region"], record["census_year"])
+            w.writerow({
+                "region": record["region"],
+                "census_year": record["census_year"],
+                "population": record["population"],
+                "modern_region": modern,
+            })
     print(f"OK: {len(CENSUS)} records -> {out}")
 
 

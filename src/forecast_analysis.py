@@ -1,10 +1,20 @@
-"""Demographic forecasting and event-population correlation for Chile."""
+"""Demographic forecasting and event-population correlation for Chile.
+
+⚠️ LIMITACIONES METODOLÓGICAS:
+- Regresión lineal simple con 5-6 puntos de datos (censos 1907-2017)
+- Proyección a 2030 (13 años más allá del último censo) es EXTRAPOLACIÓN
+- No captura dinámicas no lineales (migración, natalidad, políticas públicas)
+- R² reportado es bondad de ajuste histórico, NO precisión predictiva
+- Intervalos de confianza asumen normalidad y homocedasticidad (poco realista con n=5-6)
+- Usar solo como indicador de tendencia histórica, no como predicción real
+"""
 
 import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 from sklearn.linear_model import LinearRegression
 
 BASE = Path(__file__).parent.parent
@@ -21,7 +31,7 @@ def analyze():
 
     for region in census["region"].unique():
         rdf = census[census["region"] == region].sort_values("census_year")
-        if len(rdf) < 2:
+        if len(rdf) < 3:  # Need at least 3 points for meaningful CI
             continue
         X = rdf["census_year"].values.reshape(-1, 1)
         y = rdf["population"].values
@@ -35,12 +45,32 @@ def analyze():
         mean_pop = y.mean()
         growth_rate = slope / mean_pop if mean_pop > 0 else 0
 
+        # Calculate prediction intervals (95% CI) for 2025 and 2030
+        n = len(rdf)
+        X_mean = rdf["census_year"].mean()
+        SXX = ((rdf["census_year"] - X_mean) ** 2).sum()
+        y_pred = model.predict(X)
+        residuals = y - y_pred
+        MSE = (residuals ** 2).sum() / (n - 2)
+        se_pred_2025 = np.sqrt(MSE * (1 + 1/n + (2025 - X_mean) ** 2 / SXX))
+        se_pred_2030 = np.sqrt(MSE * (1 + 1/n + (2030 - X_mean) ** 2 / SXX))
+        t_val = stats.t.ppf(0.975, n - 2)
+
         forecasts.append({
             "region": region,
             "pop_2025": round(pop_2025, 1),
+            "pop_2025_ci_lower": round(pop_2025 - t_val * se_pred_2025, 1),
+            "pop_2025_ci_upper": round(pop_2025 + t_val * se_pred_2025, 1),
             "pop_2030": round(pop_2030, 1),
+            "pop_2030_ci_lower": round(pop_2030 - t_val * se_pred_2030, 1),
+            "pop_2030_ci_upper": round(pop_2030 + t_val * se_pred_2030, 1),
             "growth_rate": round(growth_rate, 4),
+            "growth_rate_ci_lower": round((slope - t_val * np.sqrt(MSE / SXX)) / mean_pop if mean_pop > 0 else 0, 4),
+            "growth_rate_ci_upper": round((slope + t_val * np.sqrt(MSE / SXX)) / mean_pop if mean_pop > 0 else 0, 4),
             "r2": round(float(model.score(X, y)), 3),
+            "n_observations": n,
+            "method": "linear_regression",
+            "warning": "EXTrapolation beyond 2017 - high uncertainty"
         })
 
     forecasts.sort(key=lambda x: -x["growth_rate"])
@@ -87,6 +117,6 @@ if __name__ == "__main__":
         print(f"Regions forecasted: {len(result['forecasts'])}")
         print(f"Events analyzed: {len(result['event_impact'])}")
         for f in result["forecasts"][:5]:
-            print(f"  {f['region']}: 2025={f['pop_2025']}, rate={f['growth_rate']}")
+            print(f"  {f['region']}: 2025={f['pop_2025']} (CI: {f['pop_2025_ci_lower']}-{f['pop_2025_ci_upper']}), rate={f['growth_rate']}")
     else:
         print("No data")
