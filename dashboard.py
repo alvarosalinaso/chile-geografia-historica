@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import Input, Output, callback, dcc, html, dash_table
+from dash import Input, Output, callback, dcc, html, dash_table, no_update
 
 app = dash.Dash(
     __name__,
@@ -72,6 +72,46 @@ EARTHTONE_PLOTLY = dict(
 )
 
 
+BAUHAUS_POSTER_SVG = (
+    "data:image/svg+xml,"
+    "%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='90' viewBox='0 0 1200 90'%3E"
+    "%3Crect width='1200' height='90' fill='%23f7f3e9'/%3E"
+    "%3Ccircle cx='80' cy='45' r='30' fill='%231a6b5a'/%3E"
+    "%3Crect x='150' y='15' width='60' height='60' fill='%23a0522d'/%3E"
+    "%3Cpolygon points='250,75 280,15 310,75' fill='%23b8860b' stroke='%232c2c2c' stroke-width='4'/%3E"
+    "%3Cg stroke='%232c2c2c' stroke-width='2' opacity='0.12'%3E"
+    "%3Cline x1='0' y1='22' x2='1200' y2='22'/%3E%3Cline x1='0' y1='45' x2='1200' y2='45'/%3E%3Cline x1='0' y1='68' x2='1200' y2='68'/%3E"
+    "%3C/g%3E%3C/svg%3E"
+)
+
+
+def sparkline(values, color="#1a6b5a"):
+    if not values or len(values) < 2:
+        return html.Div(style={"height": "34px"})
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        y=list(values), mode="lines",
+        line={"color": color, "width": 3, "shape": "spline"},
+        fill="tozeroy", hoverinfo="skip", showlegend=False,
+    ))
+    fig.update_layout(
+        margin={"t": 0, "b": 0, "l": 0, "r": 0},
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        xaxis={"visible": False}, yaxis={"visible": False}, height=34,
+    )
+    return dcc.Graph(figure=fig, config={"displayModeBar": False}, style={"height": "34px"})
+
+
+def insight_card(question, answer, accent="#1a6b5a"):
+    return html.Div(
+        style={"backgroundColor": "#ffffff", "border": "3px solid #2c2c2c", "borderLeft": f"10px solid {accent}", "padding": "14px 16px", "marginBottom": "12px", "borderRadius": "0px"},
+        children=[
+            html.Div(question, style={"fontWeight": "800", "textTransform": "uppercase", "fontSize": "0.75rem", "letterSpacing": "0.06em", "fontFamily": "Georgia, serif"}),
+            html.Div(answer, style={"marginTop": "4px", "fontFamily": "Georgia, serif", "lineHeight": "1.5"}),
+        ],
+    )
+
+
 def _leaf_ornament():
     return html.Div(
         style={
@@ -106,12 +146,11 @@ def card(title, children, color=COLORS["card"]):
     return html.Div(
         style={
             "backgroundColor": color,
-            "borderRadius": "20px",
-            "padding": "28px 32px",
-            "marginBottom": "28px",
-            "border": f"1px solid {COLORS['border']}",
-            "borderTop": f"3px solid {COLORS['gold']}",
-            "boxShadow": "0 2px 12px rgba(0,0,0,0.06)",
+            "borderRadius": "0px",
+            "padding": "24px 26px",
+            "marginBottom": "24px",
+            "border": "3px solid #2c2c2c",
+            "boxShadow": "8px 8px 0px #2c2c2c",
             "position": "relative",
             "overflow": "hidden",
         },
@@ -141,12 +180,19 @@ def card(title, children, color=COLORS["card"]):
 
 
 def stat_row(stats):
+    def _norm(item):
+        if len(item) == 5:
+            return item
+        if len(item) == 2:
+            val, label = item
+            return (val, label, COLORS["teal"], None, None)
+        raise ValueError(f"stat_row item debe ser (val,label) o (val,label,color,trend,delta), got {item}")
     return html.Div(
         style={
             "display": "flex",
-            "gap": "18px",
+            "gap": "14px",
             "flexWrap": "wrap",
-            "marginBottom": "28px",
+            "marginBottom": "24px",
         },
         children=[
             html.Div(
@@ -154,12 +200,11 @@ def stat_row(stats):
                     "flex": "1",
                     "minWidth": "150px",
                     "backgroundColor": COLORS["card"],
-                    "borderRadius": "18px",
-                    "padding": "22px 18px",
+                    "borderRadius": "0px",
+                    "padding": "18px 14px",
                     "textAlign": "center",
-                    "border": f"1px solid {COLORS['border']}",
-                    "borderBottom": f"3px solid {COLORS['teal']}",
-                    "boxShadow": "0 2px 8px rgba(0,0,0,0.04)",
+                    "border": "3px solid #2c2c2c",
+                    "boxShadow": "6px 6px 0px #2c2c2c",
                 },
                 children=[
                     html.Div(
@@ -167,7 +212,7 @@ def stat_row(stats):
                         style={
                             "fontSize": "2.1rem",
                             "fontWeight": "800",
-                            "color": COLORS["teal"],
+                            "color": "#2c2c2c",
                             "fontFamily": "Georgia, 'Times New Roman', serif",
                             "lineHeight": "1.1",
                         },
@@ -175,16 +220,19 @@ def stat_row(stats):
                     html.Div(
                         label,
                         style={
-                            "fontSize": "0.82rem",
+                            "fontSize": "0.75rem",
+                            "fontWeight": "800",
                             "color": COLORS["sienna"],
                             "marginTop": "6px",
-                            "letterSpacing": "0.04em",
+                            "letterSpacing": "0.06em",
                             "textTransform": "uppercase",
                         },
                     ),
+                    sparkline(trend or [], color),
+                    html.Div(delta or "", title="Variación vs periodo anterior", style={"fontSize": "0.78rem", "fontWeight": "800", "color": color, "marginTop": "4px"}),
                 ],
             )
-            for val, label in stats
+            for val, label, color, trend, delta in [_norm(item) for item in stats]
         ],
     )
 
@@ -280,6 +328,11 @@ app.layout = html.Div(
                     },
                 ),
                 _leaf_ornament(),
+                html.Div(style={
+                    "backgroundImage": f"url(\"{BAUHAUS_POSTER_SVG}\")",
+                    "backgroundSize": "cover", "backgroundPosition": "center",
+                    "height": "90px", "border": "3px solid #2c2c2c", "marginTop": "16px",
+                }),
             ],
         ),
         dcc.Tabs(
@@ -332,25 +385,51 @@ def census_tab():
     if "census" not in DATA:
         return card("Censo", html.P("No hay datos disponibles"))
     df = DATA["census"]
+    national = df.groupby("census_year")["population"].sum().sort_index()
+    top_region = df[df["census_year"] == df["census_year"].max()].sort_values("population", ascending=False).iloc[0]
     stats = stat_row([
-        (str(df["region"].nunique()), "Regiones"),
-        (str(int(df["census_year"].min())) + "–" + str(int(df["census_year"].max())), "Censos"),
-        (str(int(df[df["census_year"] == df["census_year"].max()]["population"].sum())), "Población (miles)"),
+        (str(df["region"].nunique()), "Regiones", COLORS["teal"], national.values.tolist(), f"{national.iloc[-1]:,.0f} miles hoy"),
+        (str(int(df["census_year"].min())) + "–" + str(int(df["census_year"].max())), "Censos", COLORS["sienna"], national.values.tolist(), f"{len(national)} censos"),
+        (str(int(national.iloc[-1])), "Población (miles)", COLORS["gold"], national.values.tolist(), f"Top: {top_region['region']}"),
     ])
     fig_line = px.line(
         df, x="census_year", y="population", color="region",
-        title="Población por Región (miles)", markers=True,
+        title="Población por Región (miles) — clic una serie para aislar", markers=True,
     )
     fig_line.update_layout(**EARTHTONE_PLOTLY, height=600)
-    fig_line.update_traces(line=dict(shape="spline", width=2.5), marker=dict(size=7, symbol="circle"))
+    fig_line.update_traces(
+        line=dict(shape="spline", width=2.5), marker=dict(size=7, symbol="circle"),
+        hovertemplate="<b>%{fullData.name}</b><br>Año: %{x}<br>Población: %{y:,.0f} miles<extra></extra>",
+    )
     pivot = df.pivot_table(index="region", columns="census_year", values="population", fill_value=0)
     fig_heat = px.imshow(pivot, title="Mapa de Calor: Población por Región y Año", labels={"color": "Población (miles)"}, aspect="auto")
     fig_heat.update_layout(**EARTHTONE_PLOTLY, height=500)
     return html.Div([
         stats,
-        card("Evolución Demográfica", dcc.Graph(figure=fig_line)),
+        card("Key Insights — Censo", html.Div([
+            insight_card("¿Problema?", "Regiones históricas (1907–1970) no calzan con GeoJSON moderno; la serie se rompe sin mapeo.", COLORS["teal"]),
+            insight_card("¿Metodología?", "Columna modern_region + forecast lineal con IC 95% y warnings de extrapolación.", COLORS["sienna"]),
+            insight_card("¿Decisión?", "Usa la serie nacional para planificar; clic una región para aislarla en el mapa.", COLORS["gold"]),
+        ])),
+        card("Evolución Demográfica", html.Div([
+            dcc.Graph(id="census-line", figure=fig_line),
+            html.Div(id="census-crossfilter-output", style={"marginTop": "8px", "fontWeight": "700", "fontFamily": "Georgia, serif"}),
+        ])),
         card("Mapa de Calor", dcc.Graph(figure=fig_heat)),
     ])
+
+
+@callback(
+    Output("census-crossfilter-output", "children"),
+    Input("census-line", "clickData"),
+    prevent_initial_call=True,
+)
+def census_crossfilter(click):
+    if not click:
+        return no_update
+    pt = click["points"][0]
+    region = pt.get("legendgroup", pt.get("curveNumber", "?"))
+    return f"Serie seleccionada: {region} — abre el tab Mapa para verla georreferenciada."
 
 
 def events_tab():
