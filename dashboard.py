@@ -457,9 +457,12 @@ def events_tab():
     stats = stat_row([(str(len(df)), "Eventos")])
     fig_events = px.scatter(
         df, x="year", y="type", color="type", hover_data=["event", "city"],
-        title="Línea de Tiempo de Eventos Históricos", size=[10] * len(df),
+        title="Línea de Tiempo de Eventos Históricos — clic para filtrar", size=[10] * len(df),
     )
     fig_events.update_layout(**EARTHTONE_PLOTLY, height=400)
+    fig_events.update_traces(
+        hovertemplate="<b>%{customdata[0]}</b><br>Año: %{x}<br>Tipo: %{y}<extra>Clic para filtrar</extra>",
+    )
     type_counts = df["type"].value_counts()
     fig_types = px.pie(
         values=type_counts.values, names=type_counts.index,
@@ -473,9 +476,24 @@ def events_tab():
     )
     return html.Div([
         stats,
-        card("Línea de Tiempo", dcc.Graph(figure=fig_events)),
+        card("Línea de Tiempo", html.Div([
+            dcc.Graph(id="events-scatter", figure=fig_events),
+            html.Div(id="events-crossfilter-output", style={"marginTop": "8px", "fontWeight": "700", "fontFamily": "Georgia, serif"}),
+        ])),
         card("Distribución por Tipo", dcc.Graph(figure=fig_types)),
     ])
+
+
+@callback(
+    Output("events-crossfilter-output", "children"),
+    Input("events-scatter", "clickData"),
+    prevent_initial_call=True,
+)
+def events_crossfilter(click):
+    if not click:
+        return no_update
+    pt = click["points"][0]
+    return f"Evento: año {pt.get('x', '?')} ({pt.get('y', '?')}) — ver su impacto en Eventos-Población."
 
 
 def presidents_tab():
@@ -514,7 +532,8 @@ def map_tab():
     fig_map = px.choropleth(
         latest, geojson=DATA["geojson"], locations="region",
         featureidkey="properties.NOM_REG", color="population",
-        title=f"Población por Región — Censo {max_year}",
+        title=f"Población por Región — Censo {max_year} (clic una región)",
+        hover_name="region",
         color_continuous_scale=[
             [0, "#f5eed8"],
             [0.2, "#c8e6c9"],
@@ -536,7 +555,37 @@ def map_tab():
             len=0.6,
         ),
     )
-    return card("Mapa de Chile", dcc.Graph(figure=fig_map))
+    fig_map.update_traces(
+        hovertemplate="<b>%{location}</b><br>Población: %{z:,.0f} miles<extra>Clic para filtrar</extra>",
+    )
+    return card("Mapa de Chile — clic una región", html.Div([
+        dcc.Graph(id="geo-choropleth", figure=fig_map),
+        html.Div(id="map-crossfilter-output", style={"marginTop": "8px", "fontWeight": "700", "fontFamily": "Georgia, serif"}),
+    ]))
+
+
+@callback(
+    Output("map-crossfilter-output", "children"),
+    Input("geo-choropleth", "clickData"),
+    prevent_initial_call=True,
+)
+def map_crossfilter(click):
+    if not click:
+        return no_update
+    r = click["points"][0].get("location", "?")
+    return f"Región seleccionada: {r} — ver su serie en Censo y su forecast."
+
+
+@callback(
+    Output("forecast-crossfilter-output", "children"),
+    Input("forecast-growth-bar", "clickData"),
+    prevent_initial_call=True,
+)
+def forecast_crossfilter(click):
+    if not click:
+        return no_update
+    r = click["points"][0].get("x", "?")
+    return f"Región seleccionada: {r} — ver su serie histórica en Censo y su posición en el Mapa."
 
 
 def forecast_tab():
@@ -572,15 +621,21 @@ def forecast_tab():
     fig_growth = px.bar(
         fdf, x="region", y="growth_rate", color="growth_rate",
         color_continuous_scale=[[0, COLORS["sienna"]], [0.5, COLORS["gold"]], [1, COLORS["teal"]]],
-        title="Tasa de Crecimiento por Región",
+        title="Tasa de Crecimiento por Región — clic para filtrar",
     )
     fig_growth.update_layout(**EARTHTONE_PLOTLY, height=400)
     fig_growth.update_layout(xaxis_tickangle=-45)
-    fig_growth.update_traces(marker=dict(cornerradius=4))
+    fig_growth.update_traces(
+        marker=dict(cornerradius=4),
+        hovertemplate="<b>%{x}</b><br>Crecimiento: %{y:.2%}<extra>Clic para filtrar</extra>",
+    )
     return html.Div([
         stats,
         card("Población Proyectada", dcc.Graph(figure=fig_forecast)),
-        card("Tasas de Crecimiento", dcc.Graph(figure=fig_growth)),
+        card("Tasas de Crecimiento — clic para filtrar", html.Div([
+            dcc.Graph(id="forecast-growth-bar", figure=fig_growth),
+            html.Div(id="forecast-crossfilter-output", style={"marginTop": "8px", "fontWeight": "700", "fontFamily": "Georgia, serif"}),
+        ])),
         card("Tabla de Pronósticos",
              dash_table.DataTable(
                  data=fdf.to_dict("records"),
