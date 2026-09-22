@@ -404,6 +404,16 @@ def census_tab():
     pivot = df.pivot_table(index="region", columns="census_year", values="population", fill_value=0)
     fig_heat = px.imshow(pivot, title="Mapa de Calor: Población por Región y Año", labels={"color": "Población (miles)"}, aspect="auto")
     fig_heat.update_layout(**EARTHTONE_PLOTLY, height=500)
+    fig_violin = px.violin(
+        df, x="census_year", y="population", box=True, points=False,
+        title="Distribución regional por censo (ridgeline)",
+        color_discrete_sequence=[COLORS["teal"]],
+    )
+    fig_violin.update_layout(**EARTHTONE_PLOTLY, height=420)
+    fig_violin.update_traces(
+        meanline_visible=True,
+        hovertemplate="Censo %{x}<br>Población: %{y:,.0f} miles<extra></extra>",
+    )
     return html.Div([
         stats,
         card("Key Insights — Censo", html.Div([
@@ -414,6 +424,11 @@ def census_tab():
         card("Evolución Demográfica", html.Div([
             dcc.Graph(id="census-line", figure=fig_line),
             html.Div(id="census-crossfilter-output", style={"marginTop": "8px", "fontWeight": "700", "fontFamily": "Georgia, serif"}),
+        ])),
+        card("Distribución por Censo — violines", html.Div([
+            dcc.Graph(figure=fig_violin),
+            html.Div("Insight: la cola superior se alarga con el tiempo — la concentración metropolitana crece.",
+                     style={"fontStyle": "italic", "color": COLORS["muted"], "marginTop": "8px", "fontFamily": "Georgia, serif"}),
         ])),
         card("Mapa de Calor", dcc.Graph(figure=fig_heat)),
     ])
