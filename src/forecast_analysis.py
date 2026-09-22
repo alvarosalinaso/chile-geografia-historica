@@ -51,27 +51,39 @@ def analyze():
         SXX = ((rdf["census_year"] - X_mean) ** 2).sum()
         y_pred = model.predict(X)
         residuals = y - y_pred
-        MSE = (residuals ** 2).sum() / (n - 2)
-        se_pred_2025 = np.sqrt(MSE * (1 + 1/n + (2025 - X_mean) ** 2 / SXX))
-        se_pred_2030 = np.sqrt(MSE * (1 + 1/n + (2030 - X_mean) ** 2 / SXX))
+        MSE = (residuals**2).sum() / (n - 2)
+        se_pred_2025 = np.sqrt(MSE * (1 + 1 / n + (2025 - X_mean) ** 2 / SXX))
+        se_pred_2030 = np.sqrt(MSE * (1 + 1 / n + (2030 - X_mean) ** 2 / SXX))
         t_val = stats.t.ppf(0.975, n - 2)
 
-        forecasts.append({
-            "region": region,
-            "pop_2025": round(pop_2025, 1),
-            "pop_2025_ci_lower": round(pop_2025 - t_val * se_pred_2025, 1),
-            "pop_2025_ci_upper": round(pop_2025 + t_val * se_pred_2025, 1),
-            "pop_2030": round(pop_2030, 1),
-            "pop_2030_ci_lower": round(pop_2030 - t_val * se_pred_2030, 1),
-            "pop_2030_ci_upper": round(pop_2030 + t_val * se_pred_2030, 1),
-            "growth_rate": round(growth_rate, 4),
-            "growth_rate_ci_lower": round((slope - t_val * np.sqrt(MSE / SXX)) / mean_pop if mean_pop > 0 else 0, 4),
-            "growth_rate_ci_upper": round((slope + t_val * np.sqrt(MSE / SXX)) / mean_pop if mean_pop > 0 else 0, 4),
-            "r2": round(float(model.score(X, y)), 3),
-            "n_observations": n,
-            "method": "linear_regression",
-            "warning": "EXTrapolation beyond 2017 - high uncertainty"
-        })
+        forecasts.append(
+            {
+                "region": region,
+                "pop_2025": round(pop_2025, 1),
+                "pop_2025_ci_lower": round(pop_2025 - t_val * se_pred_2025, 1),
+                "pop_2025_ci_upper": round(pop_2025 + t_val * se_pred_2025, 1),
+                "pop_2030": round(pop_2030, 1),
+                "pop_2030_ci_lower": round(pop_2030 - t_val * se_pred_2030, 1),
+                "pop_2030_ci_upper": round(pop_2030 + t_val * se_pred_2030, 1),
+                "growth_rate": round(growth_rate, 4),
+                "growth_rate_ci_lower": round(
+                    (slope - t_val * np.sqrt(MSE / SXX)) / mean_pop
+                    if mean_pop > 0
+                    else 0,
+                    4,
+                ),
+                "growth_rate_ci_upper": round(
+                    (slope + t_val * np.sqrt(MSE / SXX)) / mean_pop
+                    if mean_pop > 0
+                    else 0,
+                    4,
+                ),
+                "r2": round(float(model.score(X, y)), 3),
+                "n_observations": n,
+                "method": "linear_regression",
+                "warning": "EXTrapolation beyond 2017 - high uncertainty",
+            }
+        )
 
     forecasts.sort(key=lambda x: -x["growth_rate"])
 
@@ -90,16 +102,22 @@ def analyze():
                 pop_after = float(after.iloc[0]["population"])
                 year_before = int(before.iloc[-1]["census_year"])
                 year_after = int(after.iloc[0]["census_year"])
-                change_pct = ((pop_after - pop_before) / pop_before * 100) if pop_before > 0 else 0
-                event_impact.append({
-                    "event": ev["event"],
-                    "year": ev_year,
-                    "pop_before": round(pop_before, 1),
-                    "pop_after": round(pop_after, 1),
-                    "year_before": year_before,
-                    "year_after": year_after,
-                    "change_pct": round(change_pct, 1),
-                })
+                change_pct = (
+                    ((pop_after - pop_before) / pop_before * 100)
+                    if pop_before > 0
+                    else 0
+                )
+                event_impact.append(
+                    {
+                        "event": ev["event"],
+                        "year": ev_year,
+                        "pop_before": round(pop_before, 1),
+                        "pop_after": round(pop_after, 1),
+                        "year_before": year_before,
+                        "year_after": year_after,
+                        "change_pct": round(change_pct, 1),
+                    }
+                )
 
     result = {"forecasts": forecasts, "event_impact": event_impact}
 
@@ -117,6 +135,8 @@ if __name__ == "__main__":
         print(f"Regions forecasted: {len(result['forecasts'])}")
         print(f"Events analyzed: {len(result['event_impact'])}")
         for f in result["forecasts"][:5]:
-            print(f"  {f['region']}: 2025={f['pop_2025']} (CI: {f['pop_2025_ci_lower']}-{f['pop_2025_ci_upper']}), rate={f['growth_rate']}")
+            print(
+                f"  {f['region']}: 2025={f['pop_2025']} (CI: {f['pop_2025_ci_lower']}-{f['pop_2025_ci_upper']}), rate={f['growth_rate']}"
+            )
     else:
         print("No data")

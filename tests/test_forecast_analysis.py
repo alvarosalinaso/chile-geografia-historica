@@ -1,9 +1,8 @@
 """Tests for forecast_analysis module (chile-geografia-historica)."""
 
 import json
+
 import pandas as pd
-from pathlib import Path
-import pytest
 
 from src.forecast_analysis import analyze
 
@@ -11,26 +10,38 @@ from src.forecast_analysis import analyze
 def test_analyze_returns_dict_with_ci(tmp_path, monkeypatch):
     """Test that analyze returns forecasts with confidence intervals."""
     import src.forecast_analysis as fa_module
+
     monkeypatch.setattr(fa_module, "BASE", tmp_path)
 
     data_processed = tmp_path / "data" / "processed"
     data_processed.mkdir(parents=True)
 
     # Create census.csv with enough data points for CI
-    census_data = pd.DataFrame({
-        "region": ["Region A", "Region A", "Region A", "Region B", "Region B", "Region B"],
-        "census_year": [1992, 2002, 2017, 1992, 2002, 2017],
-        "population": [100, 150, 200, 200, 250, 300],
-    })
+    census_data = pd.DataFrame(
+        {
+            "region": [
+                "Region A",
+                "Region A",
+                "Region A",
+                "Region B",
+                "Region B",
+                "Region B",
+            ],
+            "census_year": [1992, 2002, 2017, 1992, 2002, 2017],
+            "population": [100, 150, 200, 200, 250, 300],
+        }
+    )
     census_data.to_csv(data_processed / "census.csv", index=False)
 
     # Create events.csv
-    events_data = pd.DataFrame({
-        "year": [1995, 2005],
-        "event": ["Event 1", "Event 2"],
-        "type": ["Political", "Economic"],
-        "city": ["Santiago", "Valparaiso"],
-    })
+    events_data = pd.DataFrame(
+        {
+            "year": [1995, 2005],
+            "event": ["Event 1", "Event 2"],
+            "type": ["Political", "Economic"],
+            "city": ["Santiago", "Valparaiso"],
+        }
+    )
     events_data.to_csv(data_processed / "events.csv", index=False)
 
     result = analyze()
@@ -38,7 +49,7 @@ def test_analyze_returns_dict_with_ci(tmp_path, monkeypatch):
     assert "forecasts" in result
     assert "event_impact" in result
     assert len(result["forecasts"]) == 2
-    
+
     # Check CI fields exist
     for f in result["forecasts"]:
         assert "pop_2025_ci_lower" in f
@@ -57,6 +68,7 @@ def test_analyze_returns_dict_with_ci(tmp_path, monkeypatch):
 def test_analyze_no_census(tmp_path, monkeypatch):
     """Test analyze with no census data returns None."""
     import src.forecast_analysis as fa_module
+
     monkeypatch.setattr(fa_module, "BASE", tmp_path)
 
     result = analyze()
@@ -66,17 +78,20 @@ def test_analyze_no_census(tmp_path, monkeypatch):
 def test_analyze_insufficient_data_skipped(tmp_path, monkeypatch):
     """Test that regions with < 3 data points are skipped."""
     import src.forecast_analysis as fa_module
+
     monkeypatch.setattr(fa_module, "BASE", tmp_path)
 
     data_processed = tmp_path / "data" / "processed"
     data_processed.mkdir(parents=True)
 
     # Only 2 data points for Region A
-    census_data = pd.DataFrame({
-        "region": ["Region A", "Region A", "Region B", "Region B", "Region B"],
-        "census_year": [1992, 2017, 1992, 2002, 2017],
-        "population": [100, 200, 200, 250, 300],
-    })
+    census_data = pd.DataFrame(
+        {
+            "region": ["Region A", "Region A", "Region B", "Region B", "Region B"],
+            "census_year": [1992, 2017, 1992, 2002, 2017],
+            "population": [100, 200, 200, 250, 300],
+        }
+    )
     census_data.to_csv(data_processed / "census.csv", index=False)
 
     result = analyze()
@@ -90,19 +105,22 @@ def test_analyze_insufficient_data_skipped(tmp_path, monkeypatch):
 def test_analyze_creates_output_file(tmp_path, monkeypatch):
     """Test that analyze creates forecast_results.json."""
     import src.forecast_analysis as fa_module
+
     monkeypatch.setattr(fa_module, "BASE", tmp_path)
 
     data_processed = tmp_path / "data" / "processed"
     data_processed.mkdir(parents=True)
 
-    census_data = pd.DataFrame({
-        "region": ["Region A", "Region A", "Region A"],
-        "census_year": [1992, 2002, 2017],
-        "population": [100, 150, 200],
-    })
+    census_data = pd.DataFrame(
+        {
+            "region": ["Region A", "Region A", "Region A"],
+            "census_year": [1992, 2002, 2017],
+            "population": [100, 150, 200],
+        }
+    )
     census_data.to_csv(data_processed / "census.csv", index=False)
 
-    result = analyze()
+    analyze()
     output_file = tmp_path / "data" / "export" / "forecast_results.json"
     assert output_file.exists()
 
@@ -115,24 +133,29 @@ def test_analyze_creates_output_file(tmp_path, monkeypatch):
 def test_analyze_event_impact(tmp_path, monkeypatch):
     """Test event impact analysis."""
     import src.forecast_analysis as fa_module
+
     monkeypatch.setattr(fa_module, "BASE", tmp_path)
 
     data_processed = tmp_path / "data" / "processed"
     data_processed.mkdir(parents=True)
 
-    census_data = pd.DataFrame({
-        "region": ["Region A", "Region A", "Region A"],
-        "census_year": [1992, 2002, 2017],
-        "population": [100, 150, 200],
-    })
+    census_data = pd.DataFrame(
+        {
+            "region": ["Region A", "Region A", "Region A"],
+            "census_year": [1992, 2002, 2017],
+            "population": [100, 150, 200],
+        }
+    )
     census_data.to_csv(data_processed / "census.csv", index=False)
 
-    events_data = pd.DataFrame({
-        "year": [1995],
-        "event": ["Test Event"],
-        "type": ["Political"],
-        "city": ["Santiago"],
-    })
+    events_data = pd.DataFrame(
+        {
+            "year": [1995],
+            "event": ["Test Event"],
+            "type": ["Political"],
+            "city": ["Santiago"],
+        }
+    )
     events_data.to_csv(data_processed / "events.csv", index=False)
 
     result = analyze()
