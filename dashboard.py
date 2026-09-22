@@ -17,19 +17,22 @@ app = dash.Dash(
 )
 server = app.server
 
+FONT_UI = "'Inter',Georgia,serif"
+FONT_DATA = "'JetBrains Mono',Consolas,monospace"
+
 COLORS = {
-    "bg": "#f7f3e9",
-    "card": "#ffffff",
-    "card_alt": "#faf8f2",
-    "border": "#d4c9a8",
-    "teal": "#1a6b5a",
-    "sienna": "#a0522d",
-    "olive": "#556b2f",
-    "gold": "#b8860b",
-    "navy": "#191970",
-    "text": "#2c2c2c",
-    "muted": "#7a6e5d",
-    "cream": "#f5eed8",
+    "bg": "#0a0e14",
+    "card": "#11161f",
+    "card_alt": "#141b2a",
+    "border": "rgba(255,255,255,0.08)",
+    "teal": "#2dd4bf",
+    "sienna": "#fb923c",
+    "olive": "#a3b86b",
+    "gold": "#fbbf24",
+    "navy": "#818cf8",
+    "text": "#e8edf2",
+    "muted": "#8b94a3",
+    "cream": "#11161f",
 }
 
 DATA_DIR = Path(__file__).parent / "data" / "processed"
@@ -62,30 +65,31 @@ DATA = load_data()
 
 
 EARTHTONE_PLOTLY = dict(
-    template="simple_white",
-    paper_bgcolor="#f7f3e9",
-    plot_bgcolor="#faf8f2",
-    font=dict(family="Georgia, 'Times New Roman', serif", color="#2c2c2c", size=13),
-    xaxis=dict(gridcolor="#d4c9a8", zerolinecolor="#d4c9a8"),
-    yaxis=dict(gridcolor="#d4c9a8", zerolinecolor="#d4c9a8"),
-    colorway=["#1a6b5a", "#a0522d", "#556b2f", "#b8860b", "#191970", "#8b4513", "#6b8e23", "#cd853f"],
+    template="plotly_dark",
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    font=dict(family="Inter,Georgia,serif", color="#e8edf2", size=13),
+    xaxis=dict(gridcolor="rgba(255,255,255,0.06)", zerolinecolor="rgba(255,255,255,0.12)",
+               title=dict(font=dict(size=13)), tickfont=dict(family="JetBrains Mono,monospace", size=12)),
+    yaxis=dict(gridcolor="rgba(255,255,255,0.06)", zerolinecolor="rgba(255,255,255,0.12)",
+               title=dict(font=dict(size=13)), tickfont=dict(family="JetBrains Mono,monospace", size=12)),
+    legend=dict(font=dict(size=12), bgcolor="rgba(0,0,0,0)"),
+    colorway=["#56B4E9", "#E69F00", "#009E73", "#F0E442", "#CC79A7", "#D55E00", "#0072B2", "#999999"],
 )
 
-
-BAUHAUS_POSTER_SVG = (
+DATA_CANVAS_SVG = (
     "data:image/svg+xml,"
     "%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='90' viewBox='0 0 1200 90'%3E"
-    "%3Crect width='1200' height='90' fill='%23f7f3e9'/%3E"
-    "%3Ccircle cx='80' cy='45' r='30' fill='%231a6b5a'/%3E"
-    "%3Crect x='150' y='15' width='60' height='60' fill='%23a0522d'/%3E"
-    "%3Cpolygon points='250,75 280,15 310,75' fill='%23b8860b' stroke='%232c2c2c' stroke-width='4'/%3E"
-    "%3Cg stroke='%232c2c2c' stroke-width='2' opacity='0.12'%3E"
-    "%3Cline x1='0' y1='22' x2='1200' y2='22'/%3E%3Cline x1='0' y1='45' x2='1200' y2='45'/%3E%3Cline x1='0' y1='68' x2='1200' y2='68'/%3E"
-    "%3C/g%3E%3C/svg%3E"
+    "%3Crect width='1200' height='90' fill='%230a0e14'/%3E"
+    "%3Cg fill='%2322d3ee' opacity='0.16'%3E"
+    + "".join(f"%3Ccircle cx='{x}' cy='{y}' r='2'/%3E" for x in range(30, 1200, 60) for y in range(20, 90, 30)) +
+    "%3C/g%3E%3Cg fill='none' stroke='%232dd4bf' stroke-width='2' opacity='0.7'%3E"
+    "%3Cpath d='M0,70 Q200,30 400,55 T800,30 T1200,50'/%3E%3C/g%3E"
+    "%3C/svg%3E"
 )
 
 
-def sparkline(values, color="#1a6b5a"):
+def sparkline(values, color="#2dd4bf"):
     if not values or len(values) < 2:
         return html.Div(style={"height": "34px"})
     fig = go.Figure()
@@ -102,12 +106,12 @@ def sparkline(values, color="#1a6b5a"):
     return dcc.Graph(figure=fig, config={"displayModeBar": False}, style={"height": "34px"})
 
 
-def insight_card(question, answer, accent="#1a6b5a"):
+def insight_card(question, answer, accent="#2dd4bf"):
     return html.Div(
-        style={"backgroundColor": "#ffffff", "border": "3px solid #2c2c2c", "borderLeft": f"10px solid {accent}", "padding": "14px 16px", "marginBottom": "12px", "borderRadius": "0px"},
+        style={"backgroundColor": "#11161f", "border": "1px solid rgba(255,255,255,0.08)", "borderLeft": f"3px solid {accent}", "borderRadius": "10px", "padding": "14px 16px", "marginBottom": "12px"},
         children=[
-            html.Div(question, style={"fontWeight": "800", "textTransform": "uppercase", "fontSize": "0.75rem", "letterSpacing": "0.06em", "fontFamily": "Georgia, serif"}),
-            html.Div(answer, style={"marginTop": "4px", "fontFamily": "Georgia, serif", "lineHeight": "1.5"}),
+            html.Div(question, style={"fontWeight": "700", "textTransform": "uppercase", "fontSize": "0.75rem", "letterSpacing": "0.06em", "fontFamily": "Inter,Georgia,serif", "color": accent}),
+            html.Div(answer, style={"marginTop": "4px", "fontFamily": "Georgia,serif", "lineHeight": "1.55", "color": "#e8edf2"}),
         ],
     )
 
@@ -146,11 +150,11 @@ def card(title, children, color=COLORS["card"]):
     return html.Div(
         style={
             "backgroundColor": color,
-            "borderRadius": "0px",
-            "padding": "24px 26px",
-            "marginBottom": "24px",
-            "border": "3px solid #2c2c2c",
-            "boxShadow": "8px 8px 0px #2c2c2c",
+            "borderRadius": "14px",
+            "padding": "22px 24px",
+            "marginBottom": "22px",
+            "border": "1px solid rgba(255,255,255,0.08)",
+            "boxShadow": "0 8px 32px rgba(0,0,0,0.35)",
             "position": "relative",
             "overflow": "hidden",
         },
@@ -200,11 +204,10 @@ def stat_row(stats):
                     "flex": "1",
                     "minWidth": "150px",
                     "backgroundColor": COLORS["card"],
-                    "borderRadius": "0px",
+                    "borderRadius": "12px",
                     "padding": "18px 14px",
                     "textAlign": "center",
-                    "border": "3px solid #2c2c2c",
-                    "boxShadow": "6px 6px 0px #2c2c2c",
+                    "border": "1px solid rgba(255,255,255,0.08)",
                 },
                 children=[
                     html.Div(
@@ -212,8 +215,8 @@ def stat_row(stats):
                         style={
                             "fontSize": "2.1rem",
                             "fontWeight": "800",
-                            "color": "#2c2c2c",
-                            "fontFamily": "Georgia, 'Times New Roman', serif",
+                            "color": "#e8edf2",
+                            "fontFamily": "JetBrains Mono,monospace",
                             "lineHeight": "1.1",
                         },
                     ),
@@ -329,9 +332,9 @@ app.layout = html.Div(
                 ),
                 _leaf_ornament(),
                 html.Div(style={
-                    "backgroundImage": f"url(\"{BAUHAUS_POSTER_SVG}\")",
+                    "backgroundImage": f"url(\"{DATA_CANVAS_SVG}\")",
                     "backgroundSize": "cover", "backgroundPosition": "center",
-                    "height": "90px", "border": "3px solid #2c2c2c", "marginTop": "16px",
+                    "height": "90px", "border": "1px solid rgba(255,255,255,0.08)", "marginTop": "16px",
                 }),
             ],
         ),
@@ -521,7 +524,7 @@ def map_tab():
             [1.0, "#191970"],
         ],
     )
-    fig_map.update_geos(fitbounds="locations", visible=False, bgcolor="#f7f3e9")
+    fig_map.update_geos(fitbounds="locations", visible=False, bgcolor="#0a0e14")
     fig_map.update_layout(
         **EARTHTONE_PLOTLY,
         height=700,
