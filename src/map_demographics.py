@@ -1,8 +1,12 @@
 import csv
 import json
 import os
+import sys
 
 import folium
+
+sys.path.insert(0, os.path.dirname(__file__))
+from region_names import aggregate_population, canonical_region
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output", "capas")
@@ -29,15 +33,14 @@ def map_demographics():
     m = folium.Map(location=[-35.0, -71.0], zoom_start=5, tiles="CartoDB positron")
 
     for year in years:
-        year_data = {
-            r["region"]: r["population"] for r in census if r["census_year"] == year
-        }
+        # Join por nombre canónico + suma de unidades históricas por región moderna
+        year_data = aggregate_population(census, year)
         fg = folium.FeatureGroup(name=f"Censo {year}")
 
         for feature in regions["features"]:
             props = feature["properties"]
             region_name = props.get("Region", props.get("region", ""))
-            pop = year_data.get(region_name, 0)
+            pop = year_data.get(canonical_region(region_name), 0)
 
             color = "#ffffcc"
             if pop > 0:
@@ -56,7 +59,7 @@ def map_demographics():
                     "fillOpacity": 0.7,
                 },
                 popup=folium.Popup(
-                    f"<b>{region_name}</b><br>Población: {pop:,}",
+                    f"<b>{region_name}</b><br>Población: {pop:,} mil hab.",
                     max_width=200,
                 ),
             ).add_to(fg)

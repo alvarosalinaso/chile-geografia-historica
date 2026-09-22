@@ -1,8 +1,12 @@
 import csv
 import json
 import os
+import sys
 
 import folium
+
+sys.path.insert(0, os.path.dirname(__file__))
+from region_names import aggregate_population, canonical_region
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output")
@@ -80,15 +84,14 @@ def combine_layers():
 
     years = sorted({r["census_year"] for r in census})
     for year in years:
-        year_data = {
-            r["region"]: r["population"] for r in census if r["census_year"] == year
-        }
+        # Join por nombre canónico + suma de unidades históricas por región moderna
+        year_data = aggregate_population(census, year)
         if regions:
             fg = folium.FeatureGroup(name=f"Población {year}", show=(year == 2017))
             for feature in regions["features"]:
                 props = feature["properties"]
                 region_name = props.get("Region", props.get("region", ""))
-                pop = year_data.get(region_name, 0)
+                pop = year_data.get(canonical_region(region_name), 0)
                 intensity = min(pop / 3000, 1.0) if pop > 0 else 0
                 r_val = int(255 * (1 - intensity) + 178 * intensity)
                 g_val = int(255 * (1 - intensity) + 24 * intensity)
@@ -103,7 +106,8 @@ def combine_layers():
                         "fillOpacity": 0.6,
                     },
                     popup=folium.Popup(
-                        f"<b>{region_name}</b><br>Población: {pop:,}", max_width=200
+                        f"<b>{region_name}</b><br>Población: {pop:,} mil hab.",
+                        max_width=200,
                     ),
                 ).add_to(fg)
             fg.add_to(m)
