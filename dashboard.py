@@ -530,9 +530,8 @@ def map_tab():
         height=700,
         margin=dict(l=0, r=0, t=50, b=0),
         coloraxis_colorbar=dict(
-            title="Población (miles)",
-            titlefont=dict(family="Georgia, serif", size=13),
-            tickfont=dict(family="Georgia, serif"),
+            title=dict(text="Población (miles)", font=dict(family="Georgia, serif", size=13)),
+            tickfont=dict(family="JetBrains Mono,monospace"),
             thickness=18,
             len=0.6,
         ),
@@ -568,15 +567,15 @@ def forecast_tab():
         **EARTHTONE_PLOTLY,
         height=500,
         title="Población Proyectada 2025 vs 2030",
-        xaxis=dict(tickangle=-45),
-        yaxis=dict(title="Población (miles)"),
     )
+    fig_forecast.update_layout(xaxis_tickangle=-45, yaxis_title="Población (miles)")
     fig_growth = px.bar(
         fdf, x="region", y="growth_rate", color="growth_rate",
         color_continuous_scale=[[0, COLORS["sienna"]], [0.5, COLORS["gold"]], [1, COLORS["teal"]]],
         title="Tasa de Crecimiento por Región",
     )
-    fig_growth.update_layout(**EARTHTONE_PLOTLY, height=400, xaxis=dict(tickangle=-45))
+    fig_growth.update_layout(**EARTHTONE_PLOTLY, height=400)
+    fig_growth.update_layout(xaxis_tickangle=-45)
     fig_growth.update_traces(marker=dict(cornerradius=4))
     return html.Div([
         stats,
@@ -641,7 +640,8 @@ def events_pop_tab():
         color_continuous_scale=[[0, COLORS["sienna"]], [0.5, COLORS["gold"]], [1, COLORS["teal"]]],
         title="Cambio Poblacional Post-Evento (%)",
     )
-    fig_impact.update_layout(**EARTHTONE_PLOTLY, height=400, xaxis=dict(tickangle=-45))
+    fig_impact.update_layout(**EARTHTONE_PLOTLY, height=400)
+    fig_impact.update_layout(xaxis_tickangle=-45)
     fig_impact.update_traces(marker=dict(cornerradius=4))
     fig_scatter = px.scatter(
         edf, x="year", y="change_pct", size="pop_before", hover_name="event",
