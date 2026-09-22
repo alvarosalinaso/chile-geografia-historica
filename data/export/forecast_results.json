@@ -197,7 +197,7 @@
       "r2": 0.786
     }
   ],
-  "event_impact": [
+  "event_temporal_diff": [
     {
       "event": "Nueva Constitución",
       "year": 1925,

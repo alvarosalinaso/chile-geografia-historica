@@ -47,7 +47,7 @@ def test_analyze_returns_dict_with_ci(tmp_path, monkeypatch):
     result = analyze()
     assert isinstance(result, dict)
     assert "forecasts" in result
-    assert "event_impact" in result
+    assert "event_temporal_diff" in result
     assert len(result["forecasts"]) == 2
 
     # Check CI fields exist
@@ -130,8 +130,8 @@ def test_analyze_creates_output_file(tmp_path, monkeypatch):
     assert len(content["forecasts"]) == 1
 
 
-def test_analyze_event_impact(tmp_path, monkeypatch):
-    """Test event impact analysis."""
+def test_analyze_event_temporal_diff(tmp_path, monkeypatch):
+    """Test de diferencia temporal entre censos (asociación, no impacto causal)."""
     import src.forecast_analysis as fa_module
 
     monkeypatch.setattr(fa_module, "BASE", tmp_path)
@@ -159,6 +159,6 @@ def test_analyze_event_impact(tmp_path, monkeypatch):
     events_data.to_csv(data_processed / "events.csv", index=False)
 
     result = analyze()
-    assert "event_impact" in result
-    assert len(result["event_impact"]) == 1
-    assert result["event_impact"][0]["event"] == "Test Event"
+    assert "event_temporal_diff" in result
+    assert len(result["event_temporal_diff"]) == 1
+    assert result["event_temporal_diff"][0]["event"] == "Test Event"

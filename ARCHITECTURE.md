@@ -10,7 +10,7 @@ Análisis histórico-geográfico de Chile: evolución demográfica (censos 1907-
 - `data/processed/census.csv` — Censos por región (población en miles)
 - `data/processed/events.csv` — Eventos históricos (año, tipo, ciudad)
 - `data/processed/presidents.csv` — Presidentes (nombre, inicio, fin, lugar_nacimiento)
-- `data/export/forecast_results.json` — Proyecciones 2025/2030 + impacto eventos
+- `data/export/forecast_results.json` — Proyecciones 2025/2030 + diferencias temporales de población (asociación, no causal)
 
 ### Recolección (src/)
 - `collect_census.py` — CENSUS hardcodeado (1907, 1940, 1970, 1992, 2002, 2017)

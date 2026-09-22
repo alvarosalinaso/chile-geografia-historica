@@ -710,7 +710,7 @@ def events_crossfilter(click):
     if not click:
         return no_update
     pt = click["points"][0]
-    return f"Evento: año {pt.get('x', '?')} ({pt.get('y', '?')}) — ver su impacto en Eventos-Población."
+    return f"Evento: año {pt.get('x', '?')} ({pt.get('y', '?')}) — ver su diferencia entre censos en Eventos-Población."
 
 
 def presidents_tab():
@@ -969,9 +969,11 @@ def events_pop_tab():
             "Eventos-Población", html.P("Ejecuta `python src/forecast_analysis.py`")
         )
     fc = DATA["forecast"]
-    if not fc.get("event_impact"):
-        return card("Eventos-Población", html.P("No hay datos de impacto disponibles"))
-    edf = pd.DataFrame(fc["event_impact"])
+    if not fc.get("event_temporal_diff"):
+        return card(
+            "Eventos-Población", html.P("No hay diferencias temporales disponibles")
+        )
+    edf = pd.DataFrame(fc["event_temporal_diff"])
     census = DATA.get("census")
     national = (
         census.groupby("census_year")["population"].sum().reset_index()
@@ -1015,7 +1017,7 @@ def events_pop_tab():
             [0.5, COLORS["gold"]],
             [1, COLORS["teal"]],
         ],
-        title="Cambio Poblacional Post-Evento (%)",
+        title="Δ Población entre censos contiguos al evento (%)",
     )
     fig_impact.update_layout(**EARTHTONE_PLOTLY, height=400)
     fig_impact.update_layout(xaxis_tickangle=-45)
@@ -1038,7 +1040,10 @@ def events_pop_tab():
     return html.Div(
         timeline_figs
         + [
-            card("Impacto por Evento", dcc.Graph(figure=fig_impact)),
+            card(
+                "Δ Población por Evento (asociación, no causal)",
+                dcc.Graph(figure=fig_impact),
+            ),
             card("Eventos vs Cambio Poblacional", dcc.Graph(figure=fig_scatter)),
         ]
     )

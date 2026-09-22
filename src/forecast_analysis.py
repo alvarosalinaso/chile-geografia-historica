@@ -87,7 +87,8 @@ def analyze():
 
     forecasts.sort(key=lambda x: -x["growth_rate"])
 
-    event_impact = []
+    # A7: asociación temporal entre censos contiguos al evento — NO causalidad
+    event_temporal_diff = []
     if events_path.exists():
         events = pd.read_csv(events_path)
         national = census.groupby("census_year")["population"].sum().reset_index()
@@ -107,7 +108,7 @@ def analyze():
                     if pop_before > 0
                     else 0
                 )
-                event_impact.append(
+                event_temporal_diff.append(
                     {
                         "event": ev["event"],
                         "year": ev_year,
@@ -119,7 +120,7 @@ def analyze():
                     }
                 )
 
-    result = {"forecasts": forecasts, "event_impact": event_impact}
+    result = {"forecasts": forecasts, "event_temporal_diff": event_temporal_diff}
 
     output = BASE / "data" / "export" / "forecast_results.json"
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -133,7 +134,7 @@ if __name__ == "__main__":
     result = analyze()
     if result:
         print(f"Regions forecasted: {len(result['forecasts'])}")
-        print(f"Events analyzed: {len(result['event_impact'])}")
+        print(f"Events analyzed: {len(result['event_temporal_diff'])}")
         for f in result["forecasts"][:5]:
             print(
                 f"  {f['region']}: 2025={f['pop_2025']} (CI: {f['pop_2025_ci_lower']}-{f['pop_2025_ci_upper']}), rate={f['growth_rate']}"
