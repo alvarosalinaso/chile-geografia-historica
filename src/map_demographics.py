@@ -6,6 +6,7 @@ import sys
 import folium
 
 sys.path.insert(0, os.path.dirname(__file__))
+from color_scale import population_intensity
 from region_names import aggregate_population, canonical_region
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
@@ -35,6 +36,7 @@ def map_demographics():
     for year in years:
         # Join por nombre canónico + suma de unidades históricas por región moderna
         year_data = aggregate_population(census, year)
+        year_max = max(year_data.values(), default=0)
         fg = folium.FeatureGroup(name=f"Censo {year}")
 
         for feature in regions["features"]:
@@ -44,7 +46,7 @@ def map_demographics():
 
             color = "#ffffcc"
             if pop > 0:
-                intensity = min(pop / 3000, 1.0)
+                intensity = population_intensity(pop, year_max)
                 r_val = int(255 * (1 - intensity) + 178 * intensity)
                 g_val = int(255 * (1 - intensity) + 24 * intensity)
                 b_val = int(255 * (1 - intensity) + 43 * intensity)
@@ -59,7 +61,7 @@ def map_demographics():
                     "fillOpacity": 0.7,
                 },
                 popup=folium.Popup(
-                    f"<b>{region_name}</b><br>Población: {pop:,} mil hab.",
+                    f"<b>{region_name}</b><br>Población: {pop:,} personas",
                     max_width=200,
                 ),
             ).add_to(fg)
