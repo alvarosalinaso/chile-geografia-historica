@@ -44,10 +44,9 @@ dashboard.py carga DATA = load_data() al importar (módulo level)
 - Render: `gunicorn dashboard:server` (ver `render.yaml`)
 
 ## Problemas conocidos
-- `dashboard.py:54` path hardcodeado `data/data/export/` (corregido a `export/`)
 - `dashboard.py` carga datos a nivel módulo (difícil de testear)
-- Censos pre-1992 usan nombres de regiones antiguas que no matchean GeoJSON moderno
-- Forecast con solo 5-6 puntos y regresión lineal a 2030
+- Forecast con solo 3 puntos (censos regionales 1992-2017) y regresión lineal a 2030: extrapolación de alta incertidumbre
+- El GeoJSON de regiones no se versiona (fuentes sin licencia): se descarga en build de Render (`render.yaml`)
 
 ## Tests
 - `tests/test_analysis.py` — Datos hardcodeados (presidents, events, census)

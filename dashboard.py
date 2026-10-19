@@ -66,11 +66,11 @@ def load_data():
         data["presidents"] = pd.read_csv(presidents_path)
     geojson_path = RAW_DIR / "regiones.geojson"
     if geojson_path.exists():
-        with open(geojson_path) as f:
+        with open(geojson_path, encoding="utf-8") as f:
             data["geojson"] = normalize_geojson_regions(json.load(f))
     forecast_path = DATA_DIR.parent / "export" / "forecast_results.json"
     if forecast_path.exists():
-        with open(forecast_path) as f:
+        with open(forecast_path, encoding="utf-8") as f:
             data["forecast"] = json.load(f)
     return data
 

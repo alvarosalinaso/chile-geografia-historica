@@ -4,32 +4,39 @@
 
 ---
 
-## What is this?
+## Hallazgo principal
 
-EN: An interactive map of Chile's historical geography. Four layers showing how the country has changed over time: presidents by birthplace, population by region across census decades, key historical events, and provincial boundary evolution.
+**Chile pasó de 3.231.022 habitantes (censo 1907) a 17.574.003 (censo 2017) — 5,4× en 110 años — y la Región Metropolitana concentró el 40,5% de la población en 2017 (7.112.808 personas, INE).** El dashboard muestra esa serie oficial, el coroplético regional (censos 1992-2017) y un forecast lineal con intervalos de confianza y advertencias de extrapolación.
 
-ES: Un mapa interactivo de la geografía histórica de Chile. Cuatro capas que muestran cómo el país ha cambiado a través del tiempo: presidentes por lugar de nacimiento, población por región en diferentes censos, eventos históricos clave y evolución de límites provinciales.
+**Captura de pantalla:** TODO (agregar `docs/screenshot.png`).
+
+## Qué mide y qué no
+
+| Mide | No mide |
+|------|---------|
+| Población total y regional en censos oficiales (nacional 1907-2017; regional 1992-2017, personas exactas del INE) | Cifras regionales 1907-1970 (INE no las publica en forma utilizable; se estimaron y se eliminaron en la auditoría 2026-10) |
+| Presidentes por ciudad de nacimiento (41, según BCN Historia Política) | Orígenes étnicos, carreras previas o afiliaciones |
+| 24 eventos históricos geolocalizados (año, tipo, ciudad, coordenadas) | Causalidad: la serie eventos↔población es asociación entre censos contiguos, no efecto causal |
+| Tendencia lineal 2025/2030 con IC 95% (3 puntos por región: 1992-2017) | Predicción real: extrapolación beyond 2017 con n=3 es de alta incertidumbre |
+| Fronteras regionales actuales (16, GeoJSON descargado en build) | Cambios de límites provinciales históricos (capa de límites en desuso) |
 
 ---
 
-## The four layers
+## What is this?
+
+EN: An interactive dashboard of Chile's historical geography: presidents by birthplace, official census population by region, key historical events, and a demographic forecast with explicit uncertainty.
+
+ES: Un dashboard interactivo de la geografía histórica de Chile: presidentes por lugar de nacimiento, población oficial del censo por región, eventos históricos clave y un pronóstico demográfico con incertidumbre explícita.
+
+## The layers
 
 | Layer | What it shows | Data |
 |-------|--------------|------|
-| **Presidents** | 40+ presidents geolocalized by birthplace, color-coded by era | BCN Historia Política |
-| **Demographics** | Population by region, slider by census year (1907-2017) | INE censuses |
-| **Events** | ~24 historical events (battles, disasters, political milestones) | Wikipedia/BCN |
-| **Boundaries** | Current 16 regional boundaries with province count evolution | GeoJSON INE |
-
----
-
-## Key findings
-
-- Santiago has always been the political center (most presidents born there)
-- The Región Metropolitana concentrates ~40% of Chile's population
-- Chile went from 23 provinces (1900) to 54 provinces (2017)
-- Earthquake pattern: concentrated in central-south Chile
-- Most presidents came from just 3 cities: Santiago, Valparaíso, Concepción
+| **Censo** | Serie nacional 1907-2017 + regional 1992-2017 (personas) | INE |
+| **Presidentes** | 41 presidentes geolocalizados por nacimiento | BCN Historia Política |
+| **Eventos** | 24 eventos (batallas, desastres, hitos políticos) | BCN/Wikipedia |
+| **Mapa** | Coroplético regional, censo más reciente | INE + GeoJSON |
+| **Forecast** | Proyección lineal 2025/2030 con IC 95% y warnings | INE (regresión propia) |
 
 ---
 
@@ -41,10 +48,12 @@ cd chile-geografia-historica
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python src/analyze_all.py
+python src/analyze_all.py       # regenera CSVs y mapas HTML
+python src/forecast_analysis.py # regenera data/export/forecast_results.json
+python dashboard.py             # dashboard en http://localhost:8052
 ```
 
-Open `output/chile_historico.html` in your browser.
+Open `output/chile_historico.html` in your browser for the static map.
 
 ---
 
