@@ -56,6 +56,18 @@ Open `output/chile_historico.html` in your browser.
   - `data/processed/census.csv` — regional rows for 1992, 2002, 2017 only (official INE tables; each year's regional sum equals the national total exactly). The former 1907/1940/1970 regional rows were estimates that summed to the wrong totals (e.g. 1907: 4.250.000 fabricated vs 3.231.022 official) and were removed, not corrected: INE does not publish official historical regional tables in machine-readable form.
 - **Events and presidents:** see CSVs in `data/processed/` (sources noted in the scripts that generate them: `src/collect_events.py`, `src/collect_presidents.py`).
 
+### Data corrections (audit 2026-10)
+
+| Record | Was | Now | Source |
+|--------|-----|-----|--------|
+| Iquique naval event | "Batalla de Iquique", 1866 | "Combate Naval de Iquique", 1879 | [BCN Historia Política](https://www.bcn.cl/historiapolitica/militares/index.html) |
+| Atentado contra Pinochet | 1985 | 1986 (7 Sep 1986, Santiago) | [BCN Historia Política](https://www.bcn.cl/historiapolitica/index.html) |
+| Tratado de Ancón (1883) | coords in Chile (−27.2, −71.0) | Ancón, Perú (−11.77, −77.18) | Treaty signed in Ancón, Peru |
+| Manuel Blanco Encalada (nacimiento) | Santiago, Chile | Buenos Aires, Argentina (1790) | [BCN Historia Política](https://www.bcn.cl/historiapolitica/resenas_biograficas/wiki/Manuel_Blanco_Encalada) |
+| Aníbal Pinto (nacimiento) | Concepción | Santiago | [BCN Historia Política](https://www.bcn.cl/historiapolitica/resenas_biograficas/wiki/An%C3%ADbal_Pinto_Garmendia) |
+
+All other event coordinates and presidential birthplaces were reviewed against BCN/INE sources and kept.
+
 ---
 
 ## Project structure

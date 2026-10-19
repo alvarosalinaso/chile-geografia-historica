@@ -47,8 +47,8 @@ EVENTS = [
         "type": "político",
     },
     {
-        "year": 1866,
-        "event": "Batalla de Iquique",
+        "year": 1879,
+        "event": "Combate Naval de Iquique",
         "city": "Iquique",
         "lat": -20.2141,
         "lon": -70.1524,
@@ -65,9 +65,9 @@ EVENTS = [
     {
         "year": 1883,
         "event": "Tratado de Ancón",
-        "city": "Ancón",
-        "lat": -27.1710,
-        "lon": -70.9920,
+        "city": "Ancón (Perú)",
+        "lat": -11.7742,
+        "lon": -77.1778,
         "type": "político",
     },
     {
@@ -143,7 +143,7 @@ EVENTS = [
         "type": "político",
     },
     {
-        "year": 1985,
+        "year": 1986,
         "event": "Atentado contra Pinochet",
         "city": "Santiago",
         "lat": -33.4489,
