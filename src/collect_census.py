@@ -39,137 +39,99 @@ HISTORIC_TO_MODERN_REGION = {
 def map_to_modern_region(region: str, census_year: int) -> str:
     """Mapea nombre de región histórica a región moderna según el año del censo."""
     if census_year >= 1992:
-        # Desde 1992 en adelante, los nombres ya son modernos (con ajustes menores)
-        # 2017 agrega Arica y Parinacota, Ñuble. En 2017, Tarapacá se divide en
-        # Arica y Parinacota + Tarapacá; no podemos desagregar sin datos.
         return region
-    # Pre-1992: usar mapeo histórico
     return HISTORIC_TO_MODERN_REGION.get(region, region)
 
 
-# Chilean census data by region (selected censuses)
-# Source: INE - Instituto Nacional de Estadísticas
-# Population in thousands
+# Totales nacionales oficiales por censo (personas, no miles).
+# 1907/1940/1970: recopilación del INE publicada por Memoria Chilena (Biblioteca
+# Nacional). 1992: INE, "Censo 1992, Resultados Generales" (cuadro 1). 2002: INE,
+# síntesis censal 2002. 2017: INE, síntesis de resultados Censo 2017.
+NATIONAL_TOTALS = [
+    {
+        "census_year": 1907,
+        "population": 3231022,
+        "source": "https://www.memoriachilena.gob.cl/602/w3-article-74943.html",
+    },
+    {
+        "census_year": 1940,
+        "population": 5023539,
+        "source": "https://www.memoriachilena.gob.cl/602/w3-article-74943.html",
+    },
+    {
+        "census_year": 1970,
+        "population": 8884768,
+        "source": "https://www.memoriachilena.gob.cl/602/w3-article-74943.html",
+    },
+    {
+        "census_year": 1992,
+        "population": 13348401,
+        "source": "https://archivopatrimonial.uahurtado.cl/uploads/r/archivo-institucional-universidad-alberto-hurtado/5/b/3/5b391f1b221427792b4a02e33601c4b2d9abb69047d576c6ec18e3f6d27365d8/92-31067.pdf",
+    },
+    {
+        "census_year": 2002,
+        "population": 15116435,
+        "source": "https://www.ine.gob.cl/docs/default-source/censo-de-poblacion-y-vivienda/publicaciones-y-anuarios/2002/sintesiscensal-2002.pdf",
+    },
+    {
+        "census_year": 2017,
+        "population": 17574003,
+        "source": "https://www.ine.gob.cl/docs/default-source/censo-de-poblacion-y-vivienda/publicaciones-y-anuarios/2017/publicaci%C3%B3n-de-resultados/sintesis-de-resultados-censo2017.pdf",
+    },
+]
+
+# Población por región (personas exactas), solo censos con tabla regional
+# oficial del INE. Las sumas regionales coinciden exactamente con los totales
+# nacionales de NATIONAL_TOTALS. No hay cifras regionales oficiales en formato
+# publicado para 1907/1940/1970, así que esas filas se eliminaron en lugar de
+# estimarse.
 CENSUS = [
-    # 1907 census (7 regions)
-    {"region": "Tarapacá", "census_year": 1907, "population": 118},
-    {"region": "Antofagasta", "census_year": 1907, "population": 136},
-    {"region": "Atacama", "census_year": 1907, "population": 83},
-    {"region": "Coquimbo", "census_year": 1907, "population": 266},
-    {"region": "Aconcagua", "census_year": 1907, "population": 312},
-    {"region": "Valparaíso", "census_year": 1907, "population": 388},
-    {"region": "Santiago", "census_year": 1907, "population": 519},
-    {"region": "O'Higgins", "census_year": 1907, "population": 182},
-    {"region": "Colchagua", "census_year": 1907, "population": 264},
-    {"region": "Cauquenes", "census_year": 1907, "population": 122},
-    {"region": "Talca", "census_year": 1907, "population": 227},
-    {"region": "Linares", "census_year": 1907, "population": 148},
-    {"region": "Ñuble", "census_year": 1907, "population": 262},
-    {"region": "Concepción", "census_year": 1907, "population": 323},
-    {"region": "Arauco", "census_year": 1907, "population": 85},
-    {"region": "Biobío", "census_year": 1907, "population": 115},
-    {"region": "Malleco", "census_year": 1907, "population": 122},
-    {"region": "Cautín", "census_year": 1907, "population": 163},
-    {"region": "Valdivia", "census_year": 1907, "population": 183},
-    {"region": "Llanquihue", "census_year": 1907, "population": 99},
-    {"region": "Chiloé", "census_year": 1907, "population": 107},
-    {"region": "Aysén", "census_year": 1907, "population": 8},
-    {"region": "Magallanes", "census_year": 1907, "population": 18},
-    # 1940 census
-    {"region": "Tarapacá", "census_year": 1940, "population": 195},
-    {"region": "Antofagasta", "census_year": 1940, "population": 225},
-    {"region": "Atacama", "census_year": 1940, "population": 114},
-    {"region": "Coquimbo", "census_year": 1940, "population": 353},
-    {"region": "Aconcagua", "census_year": 1940, "population": 362},
-    {"region": "Valparaíso", "census_year": 1940, "population": 550},
-    {"region": "Santiago", "census_year": 1940, "population": 1009},
-    {"region": "O'Higgins", "census_year": 1940, "population": 243},
-    {"region": "Colchagua", "census_year": 1940, "population": 316},
-    {"region": "Cauquenes", "census_year": 1940, "population": 145},
-    {"region": "Talca", "census_year": 1940, "population": 281},
-    {"region": "Linares", "census_year": 1940, "population": 187},
-    {"region": "Ñuble", "census_year": 1940, "population": 314},
-    {"region": "Concepción", "census_year": 1940, "population": 454},
-    {"region": "Arauco", "census_year": 1940, "population": 107},
-    {"region": "Biobío", "census_year": 1940, "population": 167},
-    {"region": "Malleco", "census_year": 1940, "population": 148},
-    {"region": "Cautín", "census_year": 1940, "population": 249},
-    {"region": "Valdivia", "census_year": 1940, "population": 245},
-    {"region": "Llanquihue", "census_year": 1940, "population": 157},
-    {"region": "Chiloé", "census_year": 1940, "population": 143},
-    {"region": "Aysén", "census_year": 1940, "population": 25},
-    {"region": "Magallanes", "census_year": 1940, "population": 48},
-    # 1970 census (13 regions by then)
-    {"region": "Tarapacá", "census_year": 1970, "population": 237},
-    {"region": "Antofagasta", "census_year": 1970, "population": 319},
-    {"region": "Atacama", "census_year": 1970, "population": 167},
-    {"region": "Coquimbo", "census_year": 1970, "population": 444},
-    {"region": "Valparaíso", "census_year": 1970, "population": 822},
-    {"region": "Santiago", "census_year": 1970, "population": 3227},
-    {"region": "O'Higgins", "census_year": 1970, "population": 527},
-    {"region": "Colchagua", "census_year": 1970, "population": 350},
-    {"region": "Curicó", "census_year": 1970, "population": 239},
-    {"region": "Talca", "census_year": 1970, "population": 513},
-    {"region": "Linares", "census_year": 1970, "population": 295},
-    {"region": "Ñuble", "census_year": 1970, "population": 430},
-    {"region": "Concepción", "census_year": 1970, "population": 750},
-    {"region": "Arauco", "census_year": 1970, "population": 139},
-    {"region": "Biobío", "census_year": 1970, "population": 243},
-    {"region": "Malleco", "census_year": 1970, "population": 181},
-    {"region": "Cautín", "census_year": 1970, "population": 390},
-    {"region": "Valdivia", "census_year": 1970, "population": 304},
-    {"region": "Osorno", "census_year": 1970, "population": 300},
-    {"region": "Llanquihue", "census_year": 1970, "population": 242},
-    {"region": "Chiloé", "census_year": 1970, "population": 149},
-    {"region": "Aysén", "census_year": 1970, "population": 66},
-    {"region": "Magallanes", "census_year": 1970, "population": 101},
-    # 1992 census (13 regions)
-    {"region": "Tarapacá", "census_year": 1992, "population": 315},
-    {"region": "Antofagasta", "census_year": 1992, "population": 430},
-    {"region": "Atacama", "census_year": 1992, "population": 214},
-    {"region": "Coquimbo", "census_year": 1992, "population": 527},
-    {"region": "Valparaíso", "census_year": 1992, "population": 1370},
-    {"region": "Metropolitana", "census_year": 1992, "population": 5223},
-    {"region": "O'Higgins", "census_year": 1992, "population": 746},
-    {"region": "Maule", "census_year": 1992, "population": 836},
-    {"region": "Biobío", "census_year": 1992, "population": 1823},
-    {"region": "La Araucanía", "census_year": 1992, "population": 868},
-    {"region": "Los Ríos", "census_year": 1992, "population": 344},
-    {"region": "Los Lagos", "census_year": 1992, "population": 667},
-    {"region": "Aysén", "census_year": 1992, "population": 84},
-    {"region": "Magallanes", "census_year": 1992, "population": 143},
-    # 2002 census (13 regions)
-    {"region": "Tarapacá", "census_year": 2002, "population": 428},
-    {"region": "Antofagasta", "census_year": 2002, "population": 514},
-    {"region": "Atacama", "census_year": 2002, "population": 254},
-    {"region": "Coquimbo", "census_year": 2002, "population": 604},
-    {"region": "Valparaíso", "census_year": 2002, "population": 1547},
-    {"region": "Metropolitana", "census_year": 2002, "population": 6061},
-    {"region": "O'Higgins", "census_year": 2002, "population": 812},
-    {"region": "Maule", "census_year": 2002, "population": 915},
-    {"region": "Biobío", "census_year": 2002, "population": 1951},
-    {"region": "La Araucanía", "census_year": 2002, "population": 942},
-    {"region": "Los Ríos", "census_year": 2002, "population": 372},
-    {"region": "Los Lagos", "census_year": 2002, "population": 731},
-    {"region": "Aysén", "census_year": 2002, "population": 97},
-    {"region": "Magallanes", "census_year": 2002, "population": 157},
-    # 2017 census (16 regions)
-    {"region": "Arica y Parinacota", "census_year": 2017, "population": 226},
-    {"region": "Tarapacá", "census_year": 2017, "population": 382},
-    {"region": "Antofagasta", "census_year": 2017, "population": 607},
-    {"region": "Atacama", "census_year": 2017, "population": 301},
-    {"region": "Coquimbo", "census_year": 2017, "population": 757},
-    {"region": "Valparaíso", "census_year": 2017, "population": 1855},
-    {"region": "Metropolitana", "census_year": 2017, "population": 7113},
-    {"region": "O'Higgins", "census_year": 2017, "population": 915},
-    {"region": "Maule", "census_year": 2017, "population": 1045},
-    {"region": "Ñuble", "census_year": 2017, "population": 511},
-    {"region": "Biobío", "census_year": 2017, "population": 1555},
-    {"region": "La Araucanía", "census_year": 2017, "population": 957},
-    {"region": "Los Ríos", "census_year": 2017, "population": 406},
-    {"region": "Los Lagos", "census_year": 2017, "population": 823},
-    {"region": "Aysén", "census_year": 2017, "population": 107},
-    {"region": "Magallanes", "census_year": 2017, "population": 178},
+    # Censo 1992 (13 regiones) — INE, Resultados Generales Censo 1992
+    {"region": "Tarapacá", "census_year": 1992, "population": 339579},
+    {"region": "Antofagasta", "census_year": 1992, "population": 410724},
+    {"region": "Atacama", "census_year": 1992, "population": 230873},
+    {"region": "Coquimbo", "census_year": 1992, "population": 504387},
+    {"region": "Valparaíso", "census_year": 1992, "population": 1384336},
+    {"region": "Metropolitana", "census_year": 1992, "population": 5257937},
+    {"region": "O'Higgins", "census_year": 1992, "population": 696369},
+    {"region": "Maule", "census_year": 1992, "population": 836141},
+    {"region": "Biobío", "census_year": 1992, "population": 1734305},
+    {"region": "La Araucanía", "census_year": 1992, "population": 781242},
+    {"region": "Los Lagos", "census_year": 1992, "population": 948809},
+    {"region": "Aysén", "census_year": 1992, "population": 80501},
+    {"region": "Magallanes", "census_year": 1992, "population": 143198},
+    # Censo 2002 (13 regiones) — INE, síntesis censal 2002 / Anuario Est.
+    # Regional 2008 (cuadros 2-3)
+    {"region": "Tarapacá", "census_year": 2002, "population": 428594},
+    {"region": "Antofagasta", "census_year": 2002, "population": 493984},
+    {"region": "Atacama", "census_year": 2002, "population": 254336},
+    {"region": "Coquimbo", "census_year": 2002, "population": 603210},
+    {"region": "Valparaíso", "census_year": 2002, "population": 1539852},
+    {"region": "Metropolitana", "census_year": 2002, "population": 6061185},
+    {"region": "O'Higgins", "census_year": 2002, "population": 780627},
+    {"region": "Maule", "census_year": 2002, "population": 908097},
+    {"region": "Biobío", "census_year": 2002, "population": 1861562},
+    {"region": "La Araucanía", "census_year": 2002, "population": 869535},
+    {"region": "Los Lagos", "census_year": 2002, "population": 1073135},
+    {"region": "Aysén", "census_year": 2002, "population": 91492},
+    {"region": "Magallanes", "census_year": 2002, "population": 150826},
+    # Censo 2017 (16 regiones) — INE, síntesis de resultados Censo 2017
+    {"region": "Arica y Parinacota", "census_year": 2017, "population": 226068},
+    {"region": "Tarapacá", "census_year": 2017, "population": 330558},
+    {"region": "Antofagasta", "census_year": 2017, "population": 607534},
+    {"region": "Atacama", "census_year": 2017, "population": 286168},
+    {"region": "Coquimbo", "census_year": 2017, "population": 757586},
+    {"region": "Valparaíso", "census_year": 2017, "population": 1815902},
+    {"region": "Metropolitana", "census_year": 2017, "population": 7112808},
+    {"region": "O'Higgins", "census_year": 2017, "population": 914555},
+    {"region": "Maule", "census_year": 2017, "population": 1044950},
+    {"region": "Ñuble", "census_year": 2017, "population": 480609},
+    {"region": "Biobío", "census_year": 2017, "population": 1556805},
+    {"region": "La Araucanía", "census_year": 2017, "population": 957224},
+    {"region": "Los Ríos", "census_year": 2017, "population": 384837},
+    {"region": "Los Lagos", "census_year": 2017, "population": 828708},
+    {"region": "Aysén", "census_year": 2017, "population": 103158},
+    {"region": "Magallanes", "census_year": 2017, "population": 166533},
 ]
 
 
@@ -191,7 +153,13 @@ def collect_census():
                     "modern_region": modern,
                 }
             )
-    print(f"OK: {len(CENSUS)} records -> {out}")
+    out_national = os.path.join(RAW_DIR, "census_national.csv")
+    with open(out_national, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["census_year", "population", "source"])
+        w.writeheader()
+        w.writerows(NATIONAL_TOTALS)
+    print(f"OK: {len(CENSUS)} regional records -> {out}")
+    print(f"OK: {len(NATIONAL_TOTALS)} national records -> {out_national}")
 
 
 if __name__ == "__main__":

@@ -55,6 +55,9 @@ def load_data():
     census_path = DATA_DIR / "census.csv"
     if census_path.exists():
         data["census"] = pd.read_csv(census_path)
+    national_path = DATA_DIR / "census_national.csv"
+    if national_path.exists():
+        data["census_national"] = pd.read_csv(national_path)
     events_path = DATA_DIR / "events.csv"
     if events_path.exists():
         data["events"] = pd.read_csv(events_path)
@@ -502,60 +505,81 @@ def census_tab():
     if "census" not in DATA:
         return card("Censo", html.P("No hay datos disponibles"))
     df = DATA["census"]
-    national = df.groupby("census_year")["population"].sum().sort_index()
-    top_region = (
-        df[df["census_year"] == df["census_year"].max()]
-        .sort_values("population", ascending=False)
-        .iloc[0]
-    )
+    if "census_national" in DATA:
+        national = (
+            DATA["census_national"][["census_year", "population"]]
+            .sort_values("census_year")
+            .reset_index(drop=True)
+        )
+    else:
+        national = (
+            df.groupby("census_year", as_index=False)["population"]
+            .sum()
+            .sort_values("census_year")
+            .reset_index(drop=True)
+        )
+    latest_year = int(df["census_year"].max())
+    latest = df[df["census_year"] == latest_year]
+    top_region = latest.sort_values("population", ascending=False).iloc[0]
     stats = stat_row(
         [
             (
-                str(df["region"].nunique()),
+                str(latest["region"].nunique()),
                 "Regiones",
                 COLORS["teal"],
-                national.values.tolist(),
-                f"{national.iloc[-1]:,.0f} miles hoy",
+                latest["population"].tolist(),
+                f"Censo {latest_year}",
             ),
             (
-                str(int(df["census_year"].min()))
-                + "–"
-                + str(int(df["census_year"].max())),
-                "Censos",
+                f"{int(national['census_year'].min())}–{int(national['census_year'].max())}",
+                "Censos nacionales",
                 COLORS["sienna"],
-                national.values.tolist(),
-                f"{len(national)} censos",
+                national["population"].tolist(),
+                f"{len(national)} censos (serie oficial)",
             ),
             (
-                str(int(national.iloc[-1])),
-                "Población (miles)",
+                f"{int(national['population'].iloc[-1]):,}".replace(",", "."),
+                "Población 2017",
                 COLORS["gold"],
-                national.values.tolist(),
+                national["population"].tolist(),
                 f"Top: {top_region['region']}",
             ),
         ]
+    )
+    fig_national = px.line(
+        national,
+        x="census_year",
+        y="population",
+        markers=True,
+        title="Serie Nacional Oficial (personas) — 1907 a 2017",
+    )
+    fig_national.update_layout(**EARTHTONE_PLOTLY, height=360)
+    fig_national.update_traces(
+        line=dict(shape="spline", width=3, color=COLORS["teal"]),
+        marker=dict(size=8, symbol="circle", color=COLORS["gold"]),
+        hovertemplate="Censo %{x}<br>Población: %{y:,.0f} personas<extra></extra>",
     )
     fig_line = px.line(
         df,
         x="census_year",
         y="population",
         color="region",
-        title="Población por Región (miles) — clic una serie para aislar",
+        title="Población por Región (personas) — censos 1992-2017, clic una serie",
         markers=True,
     )
     fig_line.update_layout(**EARTHTONE_PLOTLY, height=600)
     fig_line.update_traces(
         line=dict(shape="spline", width=2.5),
         marker=dict(size=7, symbol="circle"),
-        hovertemplate="<b>%{fullData.name}</b><br>Año: %{x}<br>Población: %{y:,.0f} miles<extra></extra>",
+        hovertemplate="<b>%{fullData.name}</b><br>Año: %{x}<br>Población: %{y:,.0f} personas<extra></extra>",
     )
     pivot = df.pivot_table(
         index="region", columns="census_year", values="population", fill_value=0
     )
     fig_heat = px.imshow(
         pivot,
-        title="Mapa de Calor: Población por Región y Año",
-        labels={"color": "Población (miles)"},
+        title="Mapa de Calor: Población por Región y Año (personas)",
+        labels={"color": "Población (personas)"},
         aspect="auto",
     )
     fig_heat.update_layout(**EARTHTONE_PLOTLY, height=500)
@@ -565,13 +589,13 @@ def census_tab():
         y="population",
         box=True,
         points=False,
-        title="Distribución regional por censo (ridgeline)",
+        title="Distribución regional por censo (personas)",
         color_discrete_sequence=[COLORS["teal"]],
     )
     fig_violin.update_layout(**EARTHTONE_PLOTLY, height=420)
     fig_violin.update_traces(
         meanline_visible=True,
-        hovertemplate="Censo %{x}<br>Población: %{y:,.0f} miles<extra></extra>",
+        hovertemplate="Censo %{x}<br>Población: %{y:,.0f} personas<extra></extra>",
     )
     return html.Div(
         [
@@ -581,25 +605,26 @@ def census_tab():
                 html.Div(
                     [
                         insight_card(
-                            "¿Problema?",
-                            "Regiones históricas (1907–1970) no calzan con GeoJSON moderno; la serie se rompe sin mapeo.",
+                            "¿Fuentes?",
+                            "Totales nacionales 1907-2017 y regiones 1992-2017 en personas exactas, según INE (ver README).",
                             COLORS["teal"],
                         ),
                         insight_card(
                             "¿Metodología?",
-                            "Columna modern_region + forecast lineal con IC 95% y warnings de extrapolación.",
+                            "Regiones modernas vía canonical_region; forecast lineal con IC 95% y warnings de extrapolación.",
                             COLORS["sienna"],
                         ),
                         insight_card(
-                            "¿Decisión?",
-                            "Usa la serie nacional para planificar; clic una región para aislarla en el mapa.",
+                            "¿Qué no está?",
+                            "Sin cifras regionales oficiales para 1907-1970: esas filas se eliminaron en vez de estimarse.",
                             COLORS["gold"],
                         ),
                     ]
                 ),
             ),
+            card("Serie Nacional (1907-2017)", dcc.Graph(figure=fig_national)),
             card(
-                "Evolución Demográfica",
+                "Evolución Demográfica — regiones 1992-2017",
                 html.Div(
                     [
                         dcc.Graph(id="census-line", figure=fig_line),
@@ -801,7 +826,8 @@ def map_tab():
         margin=dict(l=0, r=0, t=50, b=0),
         coloraxis_colorbar=dict(
             title=dict(
-                text="Población (miles)", font=dict(family="Georgia, serif", size=13)
+                text="Población (personas)",
+                font=dict(family="Georgia, serif", size=13),
             ),
             tickfont=dict(family="JetBrains Mono,monospace"),
             thickness=18,
@@ -809,7 +835,7 @@ def map_tab():
         ),
     )
     fig_map.update_traces(
-        hovertemplate="<b>%{location}</b><br>Población: %{z:,.0f} miles<extra>Clic para filtrar</extra>",
+        hovertemplate="<b>%{location}</b><br>Población: %{z:,.0f} personas<extra>Clic para filtrar</extra>",
     )
     return card(
         "Mapa de Chile — clic una región",
@@ -902,7 +928,7 @@ def forecast_tab():
         height=500,
         title="Población Proyectada 2025 vs 2030",
     )
-    fig_forecast.update_layout(xaxis_tickangle=-45, yaxis_title="Población (miles)")
+    fig_forecast.update_layout(xaxis_tickangle=-45, yaxis_title="Población (personas)")
     fig_growth = px.bar(
         fdf,
         x="region",
@@ -985,12 +1011,15 @@ def events_pop_tab():
             "Eventos-Población", html.P("No hay diferencias temporales disponibles")
         )
     edf = pd.DataFrame(fc["event_temporal_diff"])
-    census = DATA.get("census")
-    national = (
-        census.groupby("census_year")["population"].sum().reset_index()
-        if census is not None
-        else pd.DataFrame()
-    )
+    if "census_national" in DATA:
+        national = DATA["census_national"][["census_year", "population"]].copy()
+    else:
+        census = DATA.get("census")
+        national = (
+            census.groupby("census_year")["population"].sum().reset_index()
+            if census is not None
+            else pd.DataFrame()
+        )
     timeline_figs = []
     if not national.empty:
         fig_national = px.line(

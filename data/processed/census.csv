@@ -1,114 +1,43 @@
 region,census_year,population,modern_region
-Tarapacá,1907,118,Tarapacá
-Antofagasta,1907,136,Antofagasta
-Atacama,1907,83,Atacama
-Coquimbo,1907,266,Coquimbo
-Aconcagua,1907,312,Valparaíso
-Valparaíso,1907,388,Valparaíso
-Santiago,1907,519,Metropolitana
-O'Higgins,1907,182,O'Higgins
-Colchagua,1907,264,O'Higgins
-Cauquenes,1907,122,Maule
-Talca,1907,227,Maule
-Linares,1907,148,Maule
-Ñuble,1907,262,Ñuble
-Concepción,1907,323,Biobío
-Arauco,1907,85,Biobío
-Biobío,1907,115,Biobío
-Malleco,1907,122,La Araucanía
-Cautín,1907,163,La Araucanía
-Valdivia,1907,183,Los Ríos
-Llanquihue,1907,99,Los Lagos
-Chiloé,1907,107,Los Lagos
-Aysén,1907,8,Aysén
-Magallanes,1907,18,Magallanes
-Tarapacá,1940,195,Tarapacá
-Antofagasta,1940,225,Antofagasta
-Atacama,1940,114,Atacama
-Coquimbo,1940,353,Coquimbo
-Aconcagua,1940,362,Valparaíso
-Valparaíso,1940,550,Valparaíso
-Santiago,1940,1009,Metropolitana
-O'Higgins,1940,243,O'Higgins
-Colchagua,1940,316,O'Higgins
-Cauquenes,1940,145,Maule
-Talca,1940,281,Maule
-Linares,1940,187,Maule
-Ñuble,1940,314,Ñuble
-Concepción,1940,454,Biobío
-Arauco,1940,107,Biobío
-Biobío,1940,167,Biobío
-Malleco,1940,148,La Araucanía
-Cautín,1940,249,La Araucanía
-Valdivia,1940,245,Los Ríos
-Llanquihue,1940,157,Los Lagos
-Chiloé,1940,143,Los Lagos
-Aysén,1940,25,Aysén
-Magallanes,1940,48,Magallanes
-Tarapacá,1970,237,Tarapacá
-Antofagasta,1970,319,Antofagasta
-Atacama,1970,167,Atacama
-Coquimbo,1970,444,Coquimbo
-Valparaíso,1970,822,Valparaíso
-Santiago,1970,3227,Metropolitana
-O'Higgins,1970,527,O'Higgins
-Colchagua,1970,350,O'Higgins
-Curicó,1970,239,Maule
-Talca,1970,513,Maule
-Linares,1970,295,Maule
-Ñuble,1970,430,Ñuble
-Concepción,1970,750,Biobío
-Arauco,1970,139,Biobío
-Biobío,1970,243,Biobío
-Malleco,1970,181,La Araucanía
-Cautín,1970,390,La Araucanía
-Valdivia,1970,304,Los Ríos
-Osorno,1970,300,Los Lagos
-Llanquihue,1970,242,Los Lagos
-Chiloé,1970,149,Los Lagos
-Aysén,1970,66,Aysén
-Magallanes,1970,101,Magallanes
-Tarapacá,1992,315,Tarapacá
-Antofagasta,1992,430,Antofagasta
-Atacama,1992,214,Atacama
-Coquimbo,1992,527,Coquimbo
-Valparaíso,1992,1370,Valparaíso
-Metropolitana,1992,5223,Metropolitana
-O'Higgins,1992,746,O'Higgins
-Maule,1992,836,Maule
-Biobío,1992,1823,Biobío
-La Araucanía,1992,868,La Araucanía
-Los Ríos,1992,344,Los Ríos
-Los Lagos,1992,667,Los Lagos
-Aysén,1992,84,Aysén
-Magallanes,1992,143,Magallanes
-Tarapacá,2002,428,Tarapacá
-Antofagasta,2002,514,Antofagasta
-Atacama,2002,254,Atacama
-Coquimbo,2002,604,Coquimbo
-Valparaíso,2002,1547,Valparaíso
-Metropolitana,2002,6061,Metropolitana
-O'Higgins,2002,812,O'Higgins
-Maule,2002,915,Maule
-Biobío,2002,1951,Biobío
-La Araucanía,2002,942,La Araucanía
-Los Ríos,2002,372,Los Ríos
-Los Lagos,2002,731,Los Lagos
-Aysén,2002,97,Aysén
-Magallanes,2002,157,Magallanes
-Arica y Parinacota,2017,226,Arica y Parinacota
-Tarapacá,2017,382,Tarapacá
-Antofagasta,2017,607,Antofagasta
-Atacama,2017,301,Atacama
-Coquimbo,2017,757,Coquimbo
-Valparaíso,2017,1855,Valparaíso
-Metropolitana,2017,7113,Metropolitana
-O'Higgins,2017,915,O'Higgins
-Maule,2017,1045,Maule
-Ñuble,2017,511,Ñuble
-Biobío,2017,1555,Biobío
-La Araucanía,2017,957,La Araucanía
-Los Ríos,2017,406,Los Ríos
-Los Lagos,2017,823,Los Lagos
-Aysén,2017,107,Aysén
-Magallanes,2017,178,Magallanes
+Tarapacá,1992,339579,Tarapacá
+Antofagasta,1992,410724,Antofagasta
+Atacama,1992,230873,Atacama
+Coquimbo,1992,504387,Coquimbo
+Valparaíso,1992,1384336,Valparaíso
+Metropolitana,1992,5257937,Metropolitana
+O'Higgins,1992,696369,O'Higgins
+Maule,1992,836141,Maule
+Biobío,1992,1734305,Biobío
+La Araucanía,1992,781242,La Araucanía
+Los Lagos,1992,948809,Los Lagos
+Aysén,1992,80501,Aysén
+Magallanes,1992,143198,Magallanes
+Tarapacá,2002,428594,Tarapacá
+Antofagasta,2002,493984,Antofagasta
+Atacama,2002,254336,Atacama
+Coquimbo,2002,603210,Coquimbo
+Valparaíso,2002,1539852,Valparaíso
+Metropolitana,2002,6061185,Metropolitana
+O'Higgins,2002,780627,O'Higgins
+Maule,2002,908097,Maule
+Biobío,2002,1861562,Biobío
+La Araucanía,2002,869535,La Araucanía
+Los Lagos,2002,1073135,Los Lagos
+Aysén,2002,91492,Aysén
+Magallanes,2002,150826,Magallanes
+Arica y Parinacota,2017,226068,Arica y Parinacota
+Tarapacá,2017,330558,Tarapacá
+Antofagasta,2017,607534,Antofagasta
+Atacama,2017,286168,Atacama
+Coquimbo,2017,757586,Coquimbo
+Valparaíso,2017,1815902,Valparaíso
+Metropolitana,2017,7112808,Metropolitana
+O'Higgins,2017,914555,O'Higgins
+Maule,2017,1044950,Maule
+Ñuble,2017,480609,Ñuble
+Biobío,2017,1556805,Biobío
+La Araucanía,2017,957224,La Araucanía
+Los Ríos,2017,384837,Los Ríos
+Los Lagos,2017,828708,Los Lagos
+Aysén,2017,103158,Aysén
+Magallanes,2017,166533,Magallanes

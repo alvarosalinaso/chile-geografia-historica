@@ -51,7 +51,10 @@ Open `output/chile_historico.html` in your browser.
 ## Data sources and licenses
 
 - **Region boundaries (GeoJSON):** downloaded at build/run time by `src/collect_geojson.py` from [caracena/chile-geojson](https://github.com/caracena/chile-geojson) (regiones) and [fcortes/Chile-GeoJSON](https://github.com/fcortes/Chile-GeoJSON) (comunas). Neither repository declares a LICENSE, so the file is not committed to this repo (see `.gitignore`); Render's `buildCommand` downloads it automatically.
-- **Census, events, presidents:** see the CSVs in `data/processed/` (sources noted per dataset).
+- **Census:** all population figures are official INE numbers in exact persons.
+  - `data/processed/census_national.csv` — national totals: 1907 = 3.231.022; 1940 = 5.023.539; 1970 = 8.884.768 (INE series compiled by [Memoria Chilena](https://www.memoriachilena.gob.cl/602/w3-article-74943.html)); 1992 = 13.348.401 ([INE, Censo 1992, Resultados Generales](https://archivopatrimonial.uahurtado.cl/uploads/r/archivo-institucional-universidad-alberto-hurtado/5/b/3/5b391f1b221427792b4a02e33601c4b2d9abb69047d576c6ec18e3f6d27365d8/92-31067.pdf)); 2002 = 15.116.435 ([INE, síntesis censal 2002](https://www.ine.gob.cl/docs/default-source/censo-de-poblacion-y-vivienda/publicaciones-y-anuarios/2002/sintesiscensal-2002.pdf)); 2017 = 17.574.003 ([INE, síntesis Censo 2017](https://www.ine.gob.cl/docs/default-source/censo-de-poblacion-y-vivienda/publicaciones-y-anuarios/2017/publicaci%C3%B3n-de-resultados/sintesis-de-resultados-censo2017.pdf)).
+  - `data/processed/census.csv` — regional rows for 1992, 2002, 2017 only (official INE tables; each year's regional sum equals the national total exactly). The former 1907/1940/1970 regional rows were estimates that summed to the wrong totals (e.g. 1907: 4.250.000 fabricated vs 3.231.022 official) and were removed, not corrected: INE does not publish official historical regional tables in machine-readable form.
+- **Events and presidents:** see CSVs in `data/processed/` (sources noted in the scripts that generate them: `src/collect_events.py`, `src/collect_presidents.py`).
 
 ---
 

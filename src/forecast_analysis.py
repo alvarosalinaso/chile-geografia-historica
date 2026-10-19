@@ -1,11 +1,11 @@
 """Demographic forecasting and event-population correlation for Chile.
 
 ⚠️ LIMITACIONES METODOLÓGICAS:
-- Regresión lineal simple con 5-6 puntos de datos (censos 1907-2017)
+- Regresión lineal simple con 3 puntos de datos (censos regionales 1992-2017)
 - Proyección a 2030 (13 años más allá del último censo) es EXTRAPOLACIÓN
 - No captura dinámicas no lineales (migración, natalidad, políticas públicas)
 - R² reportado es bondad de ajuste histórico, NO precisión predictiva
-- Intervalos de confianza asumen normalidad y homocedasticidad (poco realista con n=5-6)
+- Intervalos de confianza asumen normalidad y homocedasticidad (poco realista con n=3)
 - Usar solo como indicador de tendencia histórica, no como predicción real
 """
 

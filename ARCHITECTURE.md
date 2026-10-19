@@ -7,13 +7,14 @@ Análisis histórico-geográfico de Chile: evolución demográfica (censos 1907-
 
 ### Datos
 - `data/raw/regiones.geojson` — GeoJSON de regiones actuales
-- `data/processed/census.csv` — Censos por región (población en miles)
+- `data/processed/census.csv` — Censos por región (personas, oficiales INE; solo 1992, 2002, 2017)
+- `data/processed/census_national.csv` — Totales nacionales por censo (1907-2017, personas, con URL de fuente)
 - `data/processed/events.csv` — Eventos históricos (año, tipo, ciudad)
 - `data/processed/presidents.csv` — Presidentes (nombre, inicio, fin, lugar_nacimiento)
 - `data/export/forecast_results.json` — Proyecciones 2025/2030 + diferencias temporales de población (asociación, no causal)
 
 ### Recolección (src/)
-- `collect_census.py` — CENSUS hardcodeado (1907, 1940, 1970, 1992, 2002, 2017)
+- `collect_census.py` — CENSUS hardcodeado regionales 1992/2002/2017 + NATIONAL_TOTALS 1907-2017 (INE, personas exactas)
 - `collect_events.py` — EVENTS hardcodeado
 - `collect_presidents.py` — PRESIDENTS hardcodeado + coordenadas
 - `collect_geojson.py` — Descarga GeoJSON de regiones
