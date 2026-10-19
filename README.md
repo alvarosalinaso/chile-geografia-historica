@@ -79,11 +79,16 @@ chile-geografia-historica/
 geopandas>=0.14.0
 folium>=0.16.0
 pandas>=2.0.0
-polars>=1.0.0
 requests>=2.31.0
 branca>=0.7.0
 shapely>=2.0.0
+scipy>=1.11.0
+scikit-learn>=1.3.0
+dash>=2.14.0
+plotly>=5.18.0
 ```
+
+Note: the dashboard (`dashboard.py`) needs `dash` and `plotly` (listed in `requirements.txt` and `requirements-render.txt`). `polars` was listed here before but the codebase never uses it.
 
 ---
 
