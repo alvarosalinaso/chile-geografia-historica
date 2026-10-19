@@ -65,3 +65,21 @@ def test_population_in_thousands_plausible():
     # RM 2017 ≈ 7.113 millones -> 7113 en miles
     assert totals_2017["Metropolitana"] == 7113
     assert 17000 <= sum(totals_2017.values()) <= 19000
+
+
+def test_dashboard_map_join_matches_at_least_15_regions():
+    """P1: el join real del dashboard (canonical + properties.Region) cubre el mapa."""
+    import dashboard
+
+    with open(GEOJSON, encoding="utf-8") as f:
+        gj = dashboard.normalize_geojson_regions(json.load(f))
+    geo_names = [feat["properties"]["Region"] for feat in gj["features"]]
+    assert len(geo_names) == 16
+
+    census = _load_census()
+    latest_2017 = [r for r in census if int(r["census_year"]) == 2017]
+    totals = {
+        canonical_region(r["modern_region"]): int(r["population"]) for r in latest_2017
+    }
+    matched = [n for n in geo_names if totals.get(n, 0) > 0]
+    assert len(matched) >= 15

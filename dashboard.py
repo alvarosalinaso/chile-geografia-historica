@@ -10,6 +10,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import Input, Output, callback, dash_table, dcc, html, no_update
 
+from src.region_names import canonical_region
+
 app = dash.Dash(
     __name__,
     title="Chile — Geografía Histórica",
@@ -39,6 +41,15 @@ DATA_DIR = Path(__file__).parent / "data" / "processed"
 RAW_DIR = Path(__file__).parent / "data" / "raw"
 
 
+def normalize_geojson_regions(geojson: dict) -> dict:
+    """Reescribe properties.Region a nombres canónicos (p. ej. "Tarapacá")."""
+    for feature in geojson.get("features", []):
+        props = feature.get("properties") or {}
+        if "Region" in props:
+            props["Region"] = canonical_region(props["Region"])
+    return geojson
+
+
 def load_data():
     data = {}
     census_path = DATA_DIR / "census.csv"
@@ -53,7 +64,7 @@ def load_data():
     geojson_path = RAW_DIR / "regiones.geojson"
     if geojson_path.exists():
         with open(geojson_path) as f:
-            data["geojson"] = json.load(f)
+            data["geojson"] = normalize_geojson_regions(json.load(f))
     forecast_path = DATA_DIR.parent / "export" / "forecast_results.json"
     if forecast_path.exists():
         with open(forecast_path) as f:
@@ -769,8 +780,8 @@ def map_tab():
     fig_map = px.choropleth(
         latest,
         geojson=DATA["geojson"],
-        locations="region",
-        featureidkey="properties.NOM_REG",
+        locations=latest["modern_region"].map(canonical_region),
+        featureidkey="properties.Region",
         color="population",
         title=f"Población por Región — Censo {max_year} (clic una región)",
         hover_name="region",
