@@ -130,6 +130,38 @@ def test_analyze_creates_output_file(tmp_path, monkeypatch):
     assert len(content["forecasts"]) == 1
 
 
+def test_analyze_groups_by_modern_region(tmp_path, monkeypatch):
+    """P2: unidades históricas que colapsan en la misma región moderna se agrupan."""
+    import src.forecast_analysis as fa_module
+
+    monkeypatch.setattr(fa_module, "BASE", tmp_path)
+
+    data_processed = tmp_path / "data" / "processed"
+    data_processed.mkdir(parents=True)
+
+    census_data = pd.DataFrame(
+        {
+            "region": [
+                "Valparaíso",
+                "Aconcagua",
+                "Valparaíso",
+                "Aconcagua",
+                "Valparaíso",
+                "Aconcagua",
+            ],
+            "modern_region": ["Valparaíso"] * 6,
+            "census_year": [1992, 1992, 2002, 2002, 2017, 2017],
+            "population": [100, 50, 150, 60, 200, 70],
+        }
+    )
+    census_data.to_csv(data_processed / "census.csv", index=False)
+
+    result = analyze()
+    regions = [f["region"] for f in result["forecasts"]]
+    assert regions == ["Valparaíso"]
+    assert result["forecasts"][0]["n_observations"] == 3
+
+
 def test_analyze_event_temporal_diff(tmp_path, monkeypatch):
     """Test de diferencia temporal entre censos (asociación, no impacto causal)."""
     import src.forecast_analysis as fa_module

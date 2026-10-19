@@ -29,8 +29,16 @@ def analyze():
     census = pd.read_csv(census_path)
     forecasts = []
 
-    for region in census["region"].unique():
-        rdf = census[census["region"] == region].sort_values("census_year")
+    # P2: agrupar por región moderna; unidades históricas que colapsan
+    # (p. ej. Aconcagua + Valparaíso) deben sumarse, no pronosticarse por separado.
+    group_col = "modern_region" if "modern_region" in census.columns else "region"
+    for region in census[group_col].unique():
+        rdf = (
+            census[census[group_col] == region]
+            .groupby("census_year", as_index=False)["population"]
+            .sum()
+            .sort_values("census_year")
+        )
         if len(rdf) < 3:  # Need at least 3 points for meaningful CI
             continue
         X = rdf["census_year"].values.reshape(-1, 1)
