@@ -4,3 +4,5 @@ __pycache__/
 output/
 data/raw/*.geojson
 *.html
+.coverage
+coverage.xml
