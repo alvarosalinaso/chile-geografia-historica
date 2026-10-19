@@ -48,6 +48,13 @@ Open `output/chile_historico.html` in your browser.
 
 ---
 
+## Data sources and licenses
+
+- **Region boundaries (GeoJSON):** downloaded at build/run time by `src/collect_geojson.py` from [caracena/chile-geojson](https://github.com/caracena/chile-geojson) (regiones) and [fcortes/Chile-GeoJSON](https://github.com/fcortes/Chile-GeoJSON) (comunas). Neither repository declares a LICENSE, so the file is not committed to this repo (see `.gitignore`); Render's `buildCommand` downloads it automatically.
+- **Census, events, presidents:** see the CSVs in `data/processed/` (sources noted per dataset).
+
+---
+
 ## Project structure
 
 ```

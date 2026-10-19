@@ -2,7 +2,7 @@ services:
   - type: web
     name: dashboard
     runtime: python
-    buildCommand: pip install -r requirements-render.txt
+    buildCommand: pip install -r requirements-render.txt && python src/collect_geojson.py
     startCommand: gunicorn dashboard:server --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
       - key: PYTHON_VERSION
