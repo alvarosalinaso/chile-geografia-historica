@@ -8,7 +8,7 @@
 
 **Chile pasó de 3.231.022 habitantes (censo 1907) a 17.574.003 (censo 2017) — 5,4× en 110 años — y la Región Metropolitana concentró el 40,5% de la población en 2017 (7.112.808 personas, INE).** El dashboard muestra esa serie oficial, el coroplético regional (censos 1992-2017) y un forecast lineal con intervalos de confianza y advertencias de extrapolación.
 
-**Captura de pantalla:** TODO (agregar `docs/screenshot.png`).
+**Captura de pantalla:** ![Dashboard de Chile Geografía Histórica](docs/screenshot.png)
 
 ## Qué mide y qué no
 
