@@ -1,4 +1,4 @@
-# Arquitectura — chile-geografia-historica
+# Arquitectura, chile-geografia-historica
 
 ## Visión general
 Análisis histórico-geográfico de Chile: evolución demográfica (censos 1907-2017), eventos históricos, presidentes, mapas coropléticos y forecasting demográfico.
@@ -6,32 +6,32 @@ Análisis histórico-geográfico de Chile: evolución demográfica (censos 1907-
 ## Componentes principales
 
 ### Datos
-- `data/raw/regiones.geojson` — GeoJSON de regiones actuales
-- `data/processed/census.csv` — Censos por región (personas, oficiales INE; solo 1992, 2002, 2017)
-- `data/processed/census_national.csv` — Totales nacionales por censo (1907-2017, personas, con URL de fuente)
-- `data/processed/events.csv` — Eventos históricos (año, tipo, ciudad)
-- `data/processed/presidents.csv` — Presidentes (nombre, inicio, fin, lugar_nacimiento)
-- `data/export/forecast_results.json` — Proyecciones 2025/2030 + diferencias temporales de población (asociación, no causal)
+- `data/raw/regiones.geojson`, GeoJSON de regiones actuales
+- `data/processed/census.csv`, Censos por región (personas, oficiales INE; solo 1992, 2002, 2017)
+- `data/processed/census_national.csv`, Totales nacionales por censo (1907-2017, personas, con URL de fuente)
+- `data/processed/events.csv`, Eventos históricos (año, tipo, ciudad)
+- `data/processed/presidents.csv`, Presidentes (nombre, inicio, fin, lugar_nacimiento)
+- `data/export/forecast_results.json`, Proyecciones 2025/2030 + diferencias temporales de población (asociación, no causal)
 
 ### Recolección (src/)
-- `collect_census.py` — CENSUS hardcodeado regionales 1992/2002/2017 + NATIONAL_TOTALS 1907-2017 (INE, personas exactas)
-- `collect_events.py` — EVENTS hardcodeado
-- `collect_presidents.py` — PRESIDENTS hardcodeado + coordenadas
-- `collect_geojson.py` — Descarga GeoJSON de regiones
+- `collect_census.py`, CENSUS hardcodeado regionales 1992/2002/2017 + NATIONAL_TOTALS 1907-2017 (INE, personas exactas)
+- `collect_events.py`, EVENTS hardcodeado
+- `collect_presidents.py`, PRESIDENTS hardcodeado + coordenadas
+- `collect_geojson.py`, Descarga GeoJSON de regiones
 
 ### Procesamiento
-- `combine_layers.py` — Combina capas para mapas
-- `map_boundaries.py` — Mapa de fronteras históricas
-- `map_demographics.py` — Coropléticos demográficos
-- `map_events.py` — Eventos en mapa
-- `map_presidents.py` — Presidentes en mapa
+- `combine_layers.py`, Combina capas para mapas
+- `map_boundaries.py`, Mapa de fronteras históricas
+- `map_demographics.py`, Coropléticos demográficos
+- `map_events.py`, Eventos en mapa
+- `map_presidents.py`, Presidentes en mapa
 
 ### Análisis
-- `forecast_analysis.py` — analyze: regresión lineal por región (2025, 2030) + correlación eventos-población
-- `analyze_all.py` — Orquestador
+- `forecast_analysis.py`, analyze: regresión lineal por región (2025, 2030) + correlación eventos-población
+- `analyze_all.py`, Orquestador
 
 ### Dashboard
-- `dashboard.py` — Dash app con tabs: Censo, Eventos, Presidentes, Mapa, Forecast, Eventos-Población
+- `dashboard.py`, Dash app con tabs: Censo, Eventos, Presidentes, Mapa, Forecast, Eventos-Población
 
 ## Flujo de datos
 ```
@@ -49,6 +49,6 @@ dashboard.py carga DATA = load_data() al importar (módulo level)
 - El GeoJSON de regiones no se versiona (fuentes sin licencia): se descarga en build de Render (`render.yaml`)
 
 ## Tests
-- `tests/test_analysis.py` — Datos hardcodeados (presidents, events, census)
-- `tests/test_forecast_analysis.py` — analyze() con mocks
+- `tests/test_analysis.py`, Datos hardcodeados (presidents, events, census)
+- `tests/test_forecast_analysis.py`, analyze() con mocks
 - CI: pytest + coverage + ruff (Python 3.10, 3.11, 3.12)

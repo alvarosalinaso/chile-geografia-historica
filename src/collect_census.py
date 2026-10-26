@@ -86,7 +86,7 @@ NATIONAL_TOTALS = [
 # publicado para 1907/1940/1970, así que esas filas se eliminaron en lugar de
 # estimarse.
 CENSUS = [
-    # Censo 1992 (13 regiones) — INE, Resultados Generales Censo 1992
+    # Censo 1992 (13 regiones), INE, Resultados Generales Censo 1992
     {"region": "Tarapacá", "census_year": 1992, "population": 339579},
     {"region": "Antofagasta", "census_year": 1992, "population": 410724},
     {"region": "Atacama", "census_year": 1992, "population": 230873},
@@ -100,7 +100,7 @@ CENSUS = [
     {"region": "Los Lagos", "census_year": 1992, "population": 948809},
     {"region": "Aysén", "census_year": 1992, "population": 80501},
     {"region": "Magallanes", "census_year": 1992, "population": 143198},
-    # Censo 2002 (13 regiones) — INE, síntesis censal 2002 / Anuario Est.
+    # Censo 2002 (13 regiones), INE, síntesis censal 2002 / Anuario Est.
     # Regional 2008 (cuadros 2-3)
     {"region": "Tarapacá", "census_year": 2002, "population": 428594},
     {"region": "Antofagasta", "census_year": 2002, "population": 493984},
@@ -115,7 +115,7 @@ CENSUS = [
     {"region": "Los Lagos", "census_year": 2002, "population": 1073135},
     {"region": "Aysén", "census_year": 2002, "population": 91492},
     {"region": "Magallanes", "census_year": 2002, "population": 150826},
-    # Censo 2017 (16 regiones) — INE, síntesis de resultados Censo 2017
+    # Censo 2017 (16 regiones), INE, síntesis de resultados Censo 2017
     {"region": "Arica y Parinacota", "census_year": 2017, "population": 226068},
     {"region": "Tarapacá", "census_year": 2017, "population": 330558},
     {"region": "Antofagasta", "census_year": 2017, "population": 607534},

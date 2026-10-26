@@ -31,7 +31,7 @@ def test_census_data():
 
 
 def test_events_corrected_per_audit():
-    """P5: correcciones de la auditoría 2026-10."""
+    """P5: correcciones de la revisión 2026-10."""
     from collect_events import EVENTS
 
     by_name = {e["event"]: e for e in EVENTS}
@@ -48,7 +48,7 @@ def test_events_corrected_per_audit():
 
 
 def test_presidents_birthplaces_corrected_per_audit():
-    """P5: correcciones de la auditoría 2026-10."""
+    """P5: correcciones de la revisión 2026-10."""
     from collect_presidents import PRESIDENTS
 
     by_name = {p["name"]: p for p in PRESIDENTS}

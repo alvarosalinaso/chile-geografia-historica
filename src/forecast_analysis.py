@@ -95,7 +95,7 @@ def analyze():
 
     forecasts.sort(key=lambda x: -x["growth_rate"])
 
-    # A7: asociación temporal entre censos contiguos al evento — NO causalidad
+    # A7: asociación temporal entre censos contiguos al evento, NO causalidad
     event_temporal_diff = []
     if events_path.exists():
         events = pd.read_csv(events_path)

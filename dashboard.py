@@ -1,4 +1,4 @@
-"""Dash Dashboard: Chile Geographic & Historical Analysis — Ernst Haeckel Art Nouveau Style."""
+"""Dash Dashboard: Chile Geographic & Historical Analysis, Ernst Haeckel Art Nouveau Style."""
 
 import json
 import os
@@ -14,7 +14,7 @@ from src.region_names import canonical_region
 
 app = dash.Dash(
     __name__,
-    title="Chile — Geografía Histórica",
+    title="Chile, Geografía Histórica",
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
 )
 server = app.server
@@ -551,7 +551,7 @@ def census_tab():
         x="census_year",
         y="population",
         markers=True,
-        title="Serie Nacional Oficial (personas) — 1907 a 2017",
+        title="Serie Nacional Oficial (personas), 1907 a 2017",
     )
     fig_national.update_layout(**EARTHTONE_PLOTLY, height=360)
     fig_national.update_traces(
@@ -564,7 +564,7 @@ def census_tab():
         x="census_year",
         y="population",
         color="region",
-        title="Población por Región (personas) — censos 1992-2017, clic una serie",
+        title="Población por Región (personas), censos 1992-2017, clic una serie",
         markers=True,
     )
     fig_line.update_layout(**EARTHTONE_PLOTLY, height=600)
@@ -601,7 +601,7 @@ def census_tab():
         [
             stats,
             card(
-                "Key Insights — Censo",
+                "Key Insights, Censo",
                 html.Div(
                     [
                         insight_card(
@@ -624,7 +624,7 @@ def census_tab():
             ),
             card("Serie Nacional (1907-2017)", dcc.Graph(figure=fig_national)),
             card(
-                "Evolución Demográfica — regiones 1992-2017",
+                "Evolución Demográfica, regiones 1992-2017",
                 html.Div(
                     [
                         dcc.Graph(id="census-line", figure=fig_line),
@@ -640,12 +640,12 @@ def census_tab():
                 ),
             ),
             card(
-                "Distribución por Censo — violines",
+                "Distribución por Censo, violines",
                 html.Div(
                     [
                         dcc.Graph(figure=fig_violin),
                         html.Div(
-                            "Insight: la cola superior se alarga con el tiempo — la concentración metropolitana crece.",
+                            "Insight: la cola superior se alarga con el tiempo, la concentración metropolitana crece.",
                             style={
                                 "fontStyle": "italic",
                                 "color": COLORS["muted"],
@@ -672,7 +672,7 @@ def census_crossfilter(click):
     pt = click["points"][0]
     region = pt.get("legendgroup", pt.get("curveNumber", "?"))
     return (
-        f"Serie seleccionada: {region} — abre el tab Mapa para verla georreferenciada."
+        f"Serie seleccionada: {region}, abre el tab Mapa para verla georreferenciada."
     )
 
 
@@ -687,7 +687,7 @@ def events_tab():
         y="type",
         color="type",
         hover_data=["event", "city"],
-        title="Línea de Tiempo de Eventos Históricos — clic para filtrar",
+        title="Línea de Tiempo de Eventos Históricos, clic para filtrar",
         size=[10] * len(df),
     )
     fig_events.update_layout(**EARTHTONE_PLOTLY, height=400)
@@ -746,7 +746,7 @@ def events_crossfilter(click):
     if not click:
         return no_update
     pt = click["points"][0]
-    return f"Evento: año {pt.get('x', '?')} ({pt.get('y', '?')}) — ver su diferencia entre censos en Eventos-Población."
+    return f"Evento: año {pt.get('x', '?')} ({pt.get('y', '?')}), ver su diferencia entre censos en Eventos-Población."
 
 
 def presidents_tab():
@@ -808,7 +808,7 @@ def map_tab():
         locations=latest["modern_region"].map(canonical_region),
         featureidkey="properties.Region",
         color="population",
-        title=f"Población por Región — Censo {max_year} (clic una región)",
+        title=f"Población por Región, Censo {max_year} (clic una región)",
         hover_name="region",
         color_continuous_scale=[
             [0, "#f5eed8"],
@@ -838,7 +838,7 @@ def map_tab():
         hovertemplate="<b>%{location}</b><br>Población: %{z:,.0f} personas<extra>Clic para filtrar</extra>",
     )
     return card(
-        "Mapa de Chile — clic una región",
+        "Mapa de Chile, clic una región",
         html.Div(
             [
                 dcc.Graph(id="geo-choropleth", figure=fig_map),
@@ -864,7 +864,7 @@ def map_crossfilter(click):
     if not click:
         return no_update
     r = click["points"][0].get("location", "?")
-    return f"Región seleccionada: {r} — ver su serie en Censo y su forecast."
+    return f"Región seleccionada: {r}, ver su serie en Censo y su forecast."
 
 
 @callback(
@@ -876,7 +876,7 @@ def forecast_crossfilter(click):
     if not click:
         return no_update
     r = click["points"][0].get("x", "?")
-    return f"Región seleccionada: {r} — ver su serie histórica en Censo y su posición en el Mapa."
+    return f"Región seleccionada: {r}, ver su serie histórica en Censo y su posición en el Mapa."
 
 
 def forecast_tab():
@@ -939,7 +939,7 @@ def forecast_tab():
             [0.5, COLORS["gold"]],
             [1, COLORS["teal"]],
         ],
-        title="Tasa de Crecimiento por Región — clic para filtrar",
+        title="Tasa de Crecimiento por Región, clic para filtrar",
     )
     fig_growth.update_layout(**EARTHTONE_PLOTLY, height=400)
     fig_growth.update_layout(xaxis_tickangle=-45)
@@ -952,7 +952,7 @@ def forecast_tab():
             stats,
             card("Población Proyectada", dcc.Graph(figure=fig_forecast)),
             card(
-                "Tasas de Crecimiento — clic para filtrar",
+                "Tasas de Crecimiento, clic para filtrar",
                 html.Div(
                     [
                         dcc.Graph(id="forecast-growth-bar", figure=fig_growth),
